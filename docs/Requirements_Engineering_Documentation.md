@@ -1,9 +1,11 @@
 # Dokumentacja inżynierii wymagań
 
 ## Członkowie zespołu
-- [Zofia](https://github.com/Zocha1)
-- [Marta](https://github.com/marpom03)
-- [Paweł](https://github.com/pawel-rus)
+
+- [Miyagi](https://github.com/Patr0sss) - Project Manager, FrontEnd Developer  
+- [Paweł](https://github.com/pawel-rus) - Database Administrator, README Specialist
+- [Karo(L)](https://github.com/kslowiak) - Backend Developer
+- [Piotr](https://github.com/ptrthecat) - Backend Developer
 
 ## 1. Macierz kompetencji zespołu
 
@@ -11,7 +13,7 @@
 |---------------------------------|--------|-------|-------|
 | Bazy Danych SQL                | ❌     | ❌    | ❌    |
 | Bazy Danych NoSQL              | ❌     | ❌    | ❌    |
-| Znajomość technologii AI/ML    | ✅     | ✅    | ❌    |
+| Znajomość technologii AI/ML    | ❌     | ❌    | ❌    |
 | Praca z API do transkrypcji mowy (np. Google, AWS) | ❌ | ❌    | ❌    |
 | Znajomość narzędzi OCR         | ❌     | ❌    | ❌    |
 | React TS                       | ❌     | ❌    | ❌    |
@@ -35,11 +37,10 @@
 | Pytanie                                         | Odpowiedź                                                                                     | Uwagi                          |
 |------------------------------------------------|---------------------------------------------------------------------------------------------|--------------------------------|
 | Jaka ma to być aplikacja? Webowa czy Desktopowa? | Webowa lub plugin do przeglądarki.                                                           | Powinna działać niezależnie od narzędzia do telekonferencji. |
-| Czy aplikacja wymaga logowania?                 | Nie wspomniano, ale może być przydatne dla identyfikacji użytkowników.                        | Warto omówić na spotkaniu.    |
+| Czy aplikacja wymaga logowania?                 | Nie wspomniano, ale jest to raczej oczywiste.                        | Warto omówić na spotkaniu.    |
 | Ilu użytkowników będzie korzystać z aplikacji? | Nieokreślona liczba, zakładamy wsparcie dla dowolnej liczby uczestników w spotkaniach.         | Skalowalność.                 |
 | Jakie dane mają być przetwarzane?              | Transkrypcja mowy, zrzuty ekranu, treści OCR, identyfikacja mówców.                          | -                              |
 | Jakie formaty eksportu są wymagane?            | PDF, HTML, TXT, MD.                                                                          | -                              |
-| Czy aplikacja ma działać na platformach chmurowych? | Prawdopodobnie tak, aby umożliwić niezależność i dostępność dla wielu użytkowników.          | Do potwierdzenia.             |
 | Jakie platformy do spotkań mają być wspierane? | Zoom, Microsoft Teams, Google Meet.                                                         | Możliwość rozbudowy o inne platformy. |
 | Czy aplikacja powinna działać automatycznie?   | Tak, z automatycznym uruchamianiem na podstawie wydarzeń w kalendarzu.                       | Integracja z kalendarzem.     |
 | Czy raporty mają być wysyłane automatycznie?   | Tak, e-mailem do uczestników spotkania.                                                     | Do omówienia dokładny system mailowy. |
@@ -92,23 +93,44 @@ Poniżej przedstawiono przykłady danych zgodnych z ustaloną strukturą bazy da
 | 2   | jsmith     | $2y$10$lmnopqrstuvwxyzabcdefghijk  | jsmith@example.com   | user  |
 | 3   | amiller    | $2y$10$zxywvutsrqponmlkjihgfedcba  | amiller@example.com  | user  |
 
+## 5. Diagram przypadków użycia
 
 ```mermaid
 graph LR
-    A[Login] --> B{Check Credentials}
-    B -- Valid --> C[Connect to DB]
-    B -- Invalid --> E[Error Message]
-    C --> D((Authenticate))
-    D --> F{User Role}
-    F -- User --> G[Display Voting Panel]
-    F -- Admin --> H[Display Admin Panel]
-    G --> I{Voting}
-    I -- Vote Submitted --> J[Save Vote to DB]
-    I -- Vote Failed --> K[Error Saving Vote]
-    J --> L[Vote Confirmation]
-    H --> M{Manage Polls}
-    M -- Create Poll --> N[Save Poll to DB]
-    M -- View Results --> O[Display Results]
+    A[Start Spotkania] --> B{Rozpocznij Transkrypcję}
+    B -- Tak --> C[Zaczynamy nagrywanie mowy]
+    B -- Nie --> D[Zakończ Transkrypcję]
+    C --> E{Identyfikacja mówcy}
+    E -- Użytkownik A --> F[Przypisz wypowiedź A]
+    E -- Użytkownik B --> G[Przypisz wypowiedź B]
+    F --> H[Dodaj tekst do transkrypcji]
+    G --> H
+    H --> I{Przetwórz OCR}
+    I -- Tak --> J[Rozpoznaj tekst na zrzucie ekranu]
+    I -- Nie --> K[Brak OCR]
+    J --> L[Dodaj tekst do transkrypcji]
+    K --> M[Zapisz notatki]
+    L --> M
+    M --> N[Generowanie raportu]
+    N --> O[Generowanie plików (PDF, HTML, TXT, MD)]
+    O --> P[Wysłanie raportu na e-mail]
+    P --> Q[Zakończ spotkanie]
+
+    %% Dodatkowe funkcje:
+    M --> R[Przeszukiwanie notatek]
+    R --> S[Filtruj po słowach kluczowych]
+    S --> T[Wyświetl wyniki]
+    M --> U[Analiza statystyk]
+    U --> V[Oblicz ile kto powiedział]
+    V --> W[Oblicz szybkość mówienia]
+    W --> X[Wyświetl statystyki]
+
+    %% Integracja z narzędziami:
+    Y[Integracja z kalendarzem] --> Z[Automatyczne uruchamianie nagrywania]
+    Y --> AA[Integracja z platformami (Zoom, MS Teams, Google Meet)]
+    AA --> AB[Wybór platformy spotkania]
+    AB --> AC[Transkrypcja działa na platformie]
+    Z --> AD[Synchronizacja spotkania z kalendarzem]
 
 ```
 
