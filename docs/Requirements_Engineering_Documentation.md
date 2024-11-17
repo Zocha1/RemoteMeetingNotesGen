@@ -2,10 +2,9 @@
 
 ## Członkowie zespołu
 
-- [Miyagi](https://github.com/Patr0sss) - Project Manager, FrontEnd Developer  
-- [Paweł](https://github.com/pawel-rus) - Database Administrator, README Specialist
-- [Karo(L)](https://github.com/kslowiak) - Backend Developer
-- [Piotr](https://github.com/ptrthecat) - Backend Developer
+- [Zofia](https://github.com/Zocha1)
+- [Marta](https://github.com/marpom03)
+- [Paweł](https://github.com/pawel-rus)
 
 ## 1. Macierz kompetencji zespołu
 
@@ -13,9 +12,9 @@
 |---------------------------------|--------|-------|-------|
 | Bazy Danych SQL                | ❌     | ❌    | ❌    |
 | Bazy Danych NoSQL              | ❌     | ❌    | ❌    |
-| Znajomość technologii AI/ML    | ❌     | ❌    | ❌    |
+| Znajomość technologii AI/ML    | ✅     | ✅    | ❌    |
 | Praca z API do transkrypcji mowy (np. Google, AWS) | ❌ | ❌    | ❌    |
-| Znajomość narzędzi OCR         | ❌     | ❌    | ❌    |
+| Znajomość narzędzi OCR         | ✅     | ✅    | ❌    |
 | React TS                       | ❌     | ❌    | ❌    |
 | Znajomość Flask / Django       | ❌     | ❌    | ❌    |
 | Znajomość Node.js, Express.js  | ❌     | ❌    | ❌    |
@@ -79,13 +78,7 @@
 | `email`       | `VARCHAR(100)` | Firmowy email użytkownika                         |
 | `role`        | `VARCHAR(10)`  | Rola użytkownika (`admin` albo `user`)            |
 
-
-
-### Przykład danych wejściowych
-
-Poniżej przedstawiono przykłady danych zgodnych z ustaloną strukturą bazy danych.
-
-#### Tabela: `users`
+#### Przykład danych wejściowych:
 
 | id  | username   | password                           | email                | role  |
 | --- | ---------- | ---------------------------------- | -------------------- | ----- |
@@ -93,44 +86,126 @@ Poniżej przedstawiono przykłady danych zgodnych z ustaloną strukturą bazy da
 | 2   | jsmith     | $2y$10$lmnopqrstuvwxyzabcdefghijk  | jsmith@example.com   | user  |
 | 3   | amiller    | $2y$10$zxywvutsrqponmlkjihgfedcba  | amiller@example.com  | user  |
 
+---
+
+### Tabela: `meetings`
+
+| Kolumna        | Typ danych     | Opis                                                   |
+| -------------- | -------------- | ------------------------------------------------------ |
+| `id`           | `INT`          | Unikalny identyfikator spotkania (klucz główny)         |
+| `title`        | `VARCHAR(100)` | Tytuł spotkania                                        |
+| `description`  | `TEXT`         | Opis spotkania                                         |
+| `start_time`   | `DATETIME`     | Data i godzina rozpoczęcia spotkania                   |
+| `end_time`     | `DATETIME`     | Data i godzina zakończenia spotkania                   |
+| `created_by`   | `INT`          | ID użytkownika, który utworzył spotkanie (klucz obcy) |
+
+#### Przykład danych wejściowych:
+
+| id  | title                 | description           | start_time           | end_time             | created_by |
+| --- | --------------------- | --------------------- | -------------------- | -------------------- | ---------- |
+| 1   | Spotkanie projektowe   | Omówienie postępu projektu | 2024-11-20 09:00:00 | 2024-11-20 10:00:00 | 1          |
+| 2   | Spotkanie zarządu      | Dyskusja na temat strategii | 2024-11-21 11:00:00 | 2024-11-21 12:30:00 | 2          |
+| 3   | Spotkanie z klientem   | Prezentacja wyników  | 2024-11-22 14:00:00 | 2024-11-22 15:00:00 | 3          |
+
+---
+
+### Tabela: `transcriptions`
+
+| Kolumna          | Typ danych     | Opis                                                   |
+| ---------------- | -------------- | ------------------------------------------------------ |
+| `id`             | `INT`          | Unikalny identyfikator transkrypcji (klucz główny)      |
+| `meeting_id`     | `INT`          | ID spotkania (klucz obcy)                              |
+| `speaker_id`     | `INT`          | ID mówcy (klucz obcy do tabeli `users`)                |
+| `text`           | `TEXT`         | Zapis transkrypcji tekstu                              |
+| `timestamp`      | `DATETIME`     | Czas, w którym wypowiedź została zarejestrowana        |
+
+#### Przykład danych wejściowych:
+
+| id  | meeting_id | speaker_id | text                            | timestamp           |
+| --- | ---------- | ---------- | ------------------------------- | ------------------- |
+| 1   | 1          | 1          | "Witam wszystkich na spotkaniu." | 2024-11-20 09:01:00 |
+| 2   | 1          | 2          | "Omówię postępy w projekcie."    | 2024-11-20 09:03:15 |
+| 3   | 2          | 3          | "Chciałbym przedstawić nasze cele." | 2024-11-21 11:05:00 |
+
+---
+
+### Tabela: `screenshots`
+
+| Kolumna          | Typ danych     | Opis                                                   |
+| ---------------- | -------------- | ------------------------------------------------------ |
+| `id`             | `INT`          | Unikalny identyfikator zrzutu ekranu (klucz główny)     |
+| `meeting_id`     | `INT`          | ID spotkania (klucz obcy)                              |
+| `image_url`      | `VARCHAR(255)` | URL do obrazu zrzutu ekranu                             |
+| `timestamp`      | `DATETIME`     | Czas zrobienia zrzutu ekranu                            |
+
+#### Przykład danych wejściowych:
+
+| id  | meeting_id | image_url                            | timestamp           |
+| --- | ---------- | ------------------------------------ | ------------------- |
+| 1   | 1          | "https://example.com/screenshot1.png" | 2024-11-20 09:10:00 |
+| 2   | 2          | "https://example.com/screenshot2.png" | 2024-11-21 11:10:00 |
+| 3   | 3          | "https://example.com/screenshot3.png" | 2024-11-22 14:20:00 |
+
+---
+
+### Tabela: `reports`
+
+| Kolumna         | Typ danych     | Opis                                                   |
+| --------------- | -------------- | ------------------------------------------------------ |
+| `id`            | `INT`          | Unikalny identyfikator raportu (klucz główny)           |
+| `meeting_id`    | `INT`          | ID spotkania (klucz obcy)                              |
+| `file_type`     | `VARCHAR(10)`  | Typ pliku (np. PDF, TXT, HTML, MD)                     |
+| `file_url`      | `VARCHAR(255)` | URL do wygenerowanego raportu                           |
+| `created_at`    | `DATETIME`     | Czas utworzenia raportu                                |
+
+#### Przykład danych wejściowych:
+
+| id  | meeting_id | file_type | file_url                             | created_at          |
+| --- | ---------- | --------- | ------------------------------------ | ------------------- |
+| 1   | 1          | PDF       | "https://example.com/report1.pdf"    | 2024-11-20 10:05:00 |
+| 2   | 2          | HTML      | "https://example.com/report2.html"   | 2024-11-21 12:35:00 |
+| 3   | 3          | MD        | "https://example.com/report3.md"     | 2024-11-22 15:05:00 |
+
+---
+
+### Tabela: `calendar_integration`
+
+| Kolumna         | Typ danych     | Opis                                                   |
+| --------------- | -------------- | ------------------------------------------------------ |
+| `id`            | `INT`          | Unikalny identyfikator wpisu (klucz główny)             |
+| `meeting_id`    | `INT`          | ID spotkania (klucz obcy)                              |
+| `calendar_event`| `VARCHAR(255)` | Identyfikator wydarzenia w kalendarzu (np. Google Calendar) |
+| `status`        | `VARCHAR(20)`  | Status integracji (np. 'Zakończono', 'W trakcie')      |
+
+#### Przykład danych wejściowych:
+
+| id  | meeting_id | calendar_event           | status   |
+| --- | ---------- | ------------------------ | -------- |
+| 1   | 1          | "event_id_12345"         | Zakończono |
+| 2   | 2          | "event_id_67890"         | W trakcie |
+| 3   | 3          | "event_id_54321"         | Zakończono |
+
+
 ## 5. Diagram przypadków użycia
 
 ```mermaid
 graph LR
-    A[Start Spotkania] --> B{Rozpocznij Transkrypcję}
-    B -- Tak --> C[Zaczynamy nagrywanie mowy]
-    B -- Nie --> D[Zakończ Transkrypcję]
-    C --> E{Identyfikacja mówcy}
-    E -- Użytkownik A --> F[Przypisz wypowiedź A]
-    E -- Użytkownik B --> G[Przypisz wypowiedź B]
-    F --> H[Dodaj tekst do transkrypcji]
-    G --> H
-    H --> I{Przetwórz OCR}
-    I -- Tak --> J[Rozpoznaj tekst na zrzucie ekranu]
-    I -- Nie --> K[Brak OCR]
-    J --> L[Dodaj tekst do transkrypcji]
-    K --> M[Zapisz notatki]
-    L --> M
-    M --> N[Generowanie raportu]
-    N --> O[Generowanie plików (PDF, HTML, TXT, MD)]
-    O --> P[Wysłanie raportu na e-mail]
-    P --> Q[Zakończ spotkanie]
+    A[Start Spotkania] --> B[Transkrypcja tekstu mówionego]
+    A --> C[Generowanie zrzutów ekranu]
+    C --> D[Zapis zrzutów ekranu]
+    D --> E[OCR - Rozpoznawanie tekstu]
+    B --> F{Identyfikacja mówcy}
+    F -- Użytkownik A --> G[Przypisz wypowiedź A]
+    F -- Użytkownik B --> H[Przypisz wypowiedź B]
+    G --> I[Dodaj tekst do transkrypcji]
+    H --> I
+    I --> J[Generowanie notatek]
+    E --> J
+    J --> K[Generowanie pliku PDF, TXT, HTML lub MD]
+    K --> L[Wysłanie e-mail do wszystkich uczestników]
 
-    %% Dodatkowe funkcje:
-    M --> R[Przeszukiwanie notatek]
-    R --> S[Filtruj po słowach kluczowych]
-    S --> T[Wyświetl wyniki]
-    M --> U[Analiza statystyk]
-    U --> V[Oblicz ile kto powiedział]
-    V --> W[Oblicz szybkość mówienia]
-    W --> X[Wyświetl statystyki]
-
-    %% Integracja z narzędziami:
-    Y[Integracja z kalendarzem] --> Z[Automatyczne uruchamianie nagrywania]
-    Y --> AA[Integracja z platformami (Zoom, MS Teams, Google Meet)]
-    AA --> AB[Wybór platformy spotkania]
-    AB --> AC[Transkrypcja działa na platformie]
-    Z --> AD[Synchronizacja spotkania z kalendarzem]
+    AA[Integracja z kalendarzem] --> AB[Automatyczne uruchamianie nagrywania]
+    AB --> AC[Integracja z Zoom, MS Teams, Google Meet]
 
 ```
 
@@ -143,27 +218,32 @@ sequenceDiagram
     participant BACKEND
     participant DATABASE
 
-    USER->>FRONTEND: 1. Login
-    FRONTEND->>BACKEND: 2. Send Credentials
-    BACKEND->>DATABASE: 3. Validate Credentials
-    DATABASE-->>BACKEND: 4. Credentials Valid/Invalid
-    BACKEND-->>FRONTEND: 5. Login Status (Success/Error)
-    FRONTEND-->>USER: 6. Display Login Status
+    USER->>FRONTEND: 1. Start Spotkania
+    FRONTEND->>BACKEND: 2. Rozpocznij transkrypcję mówionego tekstu
+    BACKEND->>DATABASE: 3. Zapisz transkrypcję
+    DATABASE-->>BACKEND: 4. Potwierdzenie zapisu transkrypcji
+    BACKEND-->>FRONTEND: 5. Przesyłanie transkrypcji do frontendu
 
-    USER->>FRONTEND: 7. Select Poll
-    FRONTEND->>BACKEND: 8. Request Poll Details
-    BACKEND->>DATABASE: 9. Fetch Poll Details
-    DATABASE-->>BACKEND: 10. Poll Details
-    BACKEND-->>FRONTEND: 11. Return Poll Details
-    FRONTEND-->>USER: 12. Display Poll Details
+    USER->>FRONTEND: 6. Generowanie zrzutów ekranu
+    FRONTEND->>BACKEND: 7. Zapis zrzutów ekranu
+    BACKEND->>DATABASE: 8. Zapisz zrzut ekranu
+    DATABASE-->>BACKEND: 9. Potwierdzenie zapisu zrzutów
+    BACKEND-->>FRONTEND: 10. Zapisano zrzuty ekranu
 
-    USER->>FRONTEND: 13. Submit Vote
-    FRONTEND->>BACKEND: 14. Send Vote Data
-    BACKEND->>DATABASE: 15. Save Vote
-    DATABASE-->>BACKEND: 16. Vote Saved/Failed
-    BACKEND-->>FRONTEND: 17. Confirmation/Error Message
-    FRONTEND-->>USER: 18. Display Confirmation/Error
+    BACKEND->>BACKEND: 11. Rozpoznawanie tekstu z OCR
+    BACKEND->>DATABASE: 12. Zapisanie tekstu z OCR
+    DATABASE-->>BACKEND: 13. Potwierdzenie zapisu OCR
+
+    FRONTEND->>BACKEND: 14. Generowanie notatki ze spotkania
+    BACKEND->>DATABASE: 15. Zapisanie notatki
+    DATABASE-->>BACKEND: 16. Potwierdzenie zapisu notatki
+    BACKEND-->>FRONTEND: 17. Wygenerowanie pliku (PDF, TXT, HTML)
+
+    BACKEND->>USER: 18. Wysłanie e-maila z notatką do uczestników
+    BACKEND-->>USER: 19. Potwierdzenie wysyłki e-maila
+
 ```
+
 
 
 ### 7. Sugerowany Stack technologiczny :
