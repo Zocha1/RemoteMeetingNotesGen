@@ -249,19 +249,27 @@ sequenceDiagram
 ### 7. Sugerowany Stack technologiczny :
 
 <div style="display: flex; align-items: center; gap: 10px;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" width="140" height="140">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node.js" width="140" height="140"> 
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Python-logo-notext.svg" alt="Python" width="140" height="140">
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" alt="PostgreSQL" width="140" height="140"> 
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Flask_logo.svg/2560px-Flask_logo.svg.png" alt="Flask" width="140" height="140">
 </div>
 
 #### Uzasadnienie wyboru technologii
 
-**React**
-- Jest doskonałym narzędziem do budowania interaktywnych interfejsów użytkownika, co pozwala na płynne doświadczenia dla użytkowników aplikacji webowej. 
+**Python**
+- Python to idealny wybór do realizacji funkcji związanych z rozpoznawaniem mowy oraz przetwarzaniem tekstu. Dzięki bogatemu ekosystemowi bibliotek, takim jak `SpeechRecognition` do transkrypcji mowy, `spaCy` i `NLTK` do analizy językowej, oraz `Tesseract` do rozpoznawania tekstu w obrazach (OCR), Python zapewnia szerokie możliwości w zakresie przetwarzania języka naturalnego (NLP). 
 
-**Node.js**
-- Działa na architekturze zdarzeniowej, co pozwala na obsługę wielu jednoczesnych połączeń, idealne do aplikacji wymagających dużej wydajności.
-- Użycie JavaScript zarówno po stronie klienta, jak i serwera upraszcza procesy rozwoju i umożliwia zespołowi większą elastyczność w pracy. Programiści mogą łatwiej przechodzić między front-endem a back-endem.
+**Flask**
+- Flask to lekki i elastyczny framework webowy w Pythonie, który świetnie nadaje się do budowy małych i średnich aplikacji backendowych. Jest bardziej minimalistyczny od Django, co daje większą kontrolę nad strukturą aplikacji i jej konfiguracją. Dzięki Flaskowi aplikacja może łatwiej integrować się z innymi systemami oraz dostarczać API do komunikacji z frontendem lub innymi usługami (np. Zoom, Google Meet). Flask będzie odpowiedzialny za logikę aplikacji, obsługę zapytań HTTP, zarządzanie sesjami użytkowników oraz obsługę wysyłania e-maili.
 
 **PostgreSQL**
-- To potężna relacyjna baza danych, która obsługuje dużą ilość danych, zapewniając wysoką wydajność i wsparcie dla zaawansowanych funkcji.
+- PostgreSQL to relacyjna baza danych, która została wybrana ze względu na swoją niezawodność i wsparcie dla skomplikowanych zapytań. Jest w stanie przechowywać duże ilości danych (np. transkrypcji spotkań, informacje o użytkownikach, zapisy zrzutów ekranu, wyniki OCR) oraz zapewnia wysoką wydajność i bezpieczeństwo.
+
+**Tesseract (OCR)**
+- Tesseract to jedna z najlepszych bibliotek open-source do rozpoznawania tekstu w obrazach, której użyjemy do przetwarzania obrazów z tablic czy zrzutów ekranu, automatycznie ekstraktując tekst do wykorzystania w notatkach spotkań.
+
+**SpeechRecognition (Transkrypcja Mowy)**
+- `SpeechRecognition` to biblioteka Python, która pozwala na konwersję mowy na tekst. Będzie wykorzystywana do automatycznej transkrypcji spotkań, zapewniając płynne przekształcanie rozmów w tekst w czasie rzeczywistym.
+
+**Email Integration (Send in Blue, SMTP)**
+- Backend będzie obsługiwał automatyczne generowanie raportów po spotkaniach i ich wysyłanie do uczestników. Do tej funkcji użyjemy popularnych narzędzi do wysyłania e-maili, takich jak Sendinblue (Brevo) lub SMTP do wysyłania powiadomień po zakończeniu sesji.
