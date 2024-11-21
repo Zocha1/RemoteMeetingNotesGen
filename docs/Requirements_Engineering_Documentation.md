@@ -8,60 +8,66 @@
 
 ## 1. Macierz kompetencji zespołu
 
-| Kompetencje                     | Zofia | Marta | Paweł |
-|---------------------------------|--------|-------|-------|
-| Bazy Danych SQL                | ❌     | ❌    | ❌    |
-| Bazy Danych NoSQL              | ❌     | ❌    | ❌    |
-| Znajomość technologii AI/ML    | ✅     | ✅    | ❌    |
-| Praca z API do transkrypcji mowy (np. Google, AWS) | ❌ | ❌    | ❌    |
-| Znajomość narzędzi OCR         | ✅     | ✅    | ❌    |
-| React TS                       | ❌     | ❌    | ❌    |
-| Znajomość Flask / Django       | ❌     | ❌    | ❌    |
-| Znajomość Node.js, Express.js  | ❌     | ❌    | ❌    |
-| Znajomość Java                 | ❌     | ❌    | ❌    |
-| Zarządzanie plikami i formatami dokumentów (PDF, HTML) | ❌ | ❌    | ❌    |
-| Frontend Frameworks (Vue.js, Angular) | ❌     | ❌    | ❌    |
-| DevOps / CI/CD (np. Jenkins, GitHub Actions) | ❌ | ❌    | ❌    |
-| Praca z chmurą (AWS, GCP, Azure) | ❌    | ❌    | ❌    |
-| Docker                         | ❌     | ❌    | ❌    |
-| Testowanie                     | ❌     | ❌    | ❌    |
-| Postman                        | ❌     | ❌    | ❌    |
-| Praca z narzędziami analitycznymi (ElasticSearch, Kibana) | ❌ | ❌ | ❌ |
-| Znajomość WebRTC               | ❌     | ❌    | ❌    |
-| Project Management             | ❌     | ❌    | ❌    |
+| Kompetencje                                             | Zofia | Marta | Paweł |
+|---------------------------------------------------------|-------|-------|-------|
+| Bazy Danych SQL                                         | ❌    | ❌    | ❌    |
+| Bazy Danych NoSQL                                       | ❌    | ❌    | ❌    |
+| Znajomość technologii AI/ML                             | ✅    | ✅    | ❌    |
+| Znajomość narzędzi OCR                                  | ✅    | ✅    | ❌    |
+| Znajomość PyTorch / TensorFlow                          | ✅    | ✅    | ❌    |
+| Znajomość platformy Hugging Face                        | ❌    | ❌    | ❌    |
+| Znajomość WebRTC                                        | ❌    | ❌    | ❌    |
+| Tworzenie wtyczek do przeglądarek (Chrome, Firefox)     | ❌    | ❌    | ❌    |
+| Znajomość Flask / Django                                | ❌    | ❌    | ❌    |
+| Znajomość Node.js, Express.js                           | ❌    | ❌    | ❌    |
+| Znajomość Java Spring                                   | ❌    | ❌    | ❌    |
+| Frontend Frameworks (Vue.js, Angular, React)            | ❌    | ❌    | ❌    |
+| Znajomość TypeScript                                    | ❌    | ❌    | ❌    |
+| DevOps / CI/CD (GitHub Actions)                         | ❌    | ❌    | ❌    |
+| Praca z chmurą (AWS, GCP, Azure)                        | ❌    | ❌    | ❌    |
+| Konteneryzacja - Docker                                 | ❌    | ❌    | ❌    |
+| Testowanie (unit, integracyjne)                         | ❌    | ❌    | ❌    |
+| Postman (testowanie API)                                | ❌    | ❌    | ❌    |
+| Praca z API do transkrypcji mowy (np. Google Cloud, AWS)| ❌    | ❌    | ❌    |
+| Praca z narzędziami analitycznymi (ElasticSearch, Kibana)| ❌    | ❌    | ❌    |
+| Integracja z modelami generatywnymi (ChatGPT, Gemini AI, Cloud AI) | ❌ | ❌ | ❌ |
+| Integracja z kalendarzami (Google, Outlook)             | ❌    | ❌    | ❌    |
+| Project Management                                      | ❌    | ❌    | ❌    |
 
 
 ## 2. Zestaw pytań dotyczących wymagań
 
-| Pytanie                                         | Odpowiedź                                                                                     | Uwagi                          |
-|------------------------------------------------|---------------------------------------------------------------------------------------------|--------------------------------|
-| Jaka ma to być aplikacja? Webowa czy Desktopowa? | Webowa lub plugin do przeglądarki.                                                           | Powinna działać niezależnie od narzędzia do telekonferencji. |
-| Czy aplikacja wymaga logowania?                 | Nie wspomniano, ale jest to raczej oczywiste.                        | Warto omówić na spotkaniu.    |
-| Ilu użytkowników będzie korzystać z aplikacji? | Nieokreślona liczba, zakładamy wsparcie dla dowolnej liczby uczestników w spotkaniach.         | Skalowalność.                 |
-| Jakie dane mają być przetwarzane?              | Transkrypcja mowy, zrzuty ekranu, treści OCR, identyfikacja mówców.                          | -                              |
-| Jakie formaty eksportu są wymagane?            | PDF, HTML, TXT, MD.                                                                          | -                              |
-| Jakie platformy do spotkań mają być wspierane? | Zoom, Microsoft Teams, Google Meet.                                                         | Możliwość rozbudowy o inne platformy. |
-| Czy aplikacja powinna działać automatycznie?   | Tak, z automatycznym uruchamianiem na podstawie wydarzeń w kalendarzu.                       | Integracja z kalendarzem.     |
-| Czy raporty mają być wysyłane automatycznie?   | Tak, e-mailem do uczestników spotkania.                                                     | Do omówienia dokładny system mailowy. |
-| Czy aplikacja ma identyfikować mówców?         | Tak, to opcjonalna funkcjonalność (nice to have).                                            | Może wymagać zaawansowanego przetwarzania danych. |
-| Czy potrzebne są dodatkowe analizy statystyczne? | Tak, opcjonalnie analiza ilości i szybkości wypowiedzi uczestników.                          | Do omówienia z klientem.      |
+| Pytanie                                          | Odpowiedź                                                                              | Uwagi                                             |
+|--------------------------------------------------|----------------------------------------------------------------------------------------|---------------------------------------------------|
+| Jaka ma to być aplikacja? Webowa czy Desktopowa? | Webowa lub plugin do przeglądarki.                                                     | Powinna działać niezależnie od narzędzia do telekonferencji. |
+| Czy aplikacja wymaga logowania?                  | Nie wspomniano, ale jest to raczej oczywiste.                                          | Warto omówić na spotkaniu.                        |
+| Ilu użytkowników będzie korzystać z aplikacji?   | Nieokreślona liczba, zakładamy wsparcie dla dowolnej liczby uczestników w spotkaniach. | Skalowalność.                                     |
+| Jakie dane mają być przetwarzane?                | Transkrypcja mowy, zrzuty ekranu, treści OCR, identyfikacja mówców.                    | -                                                 |
+| Jakie formaty eksportu są wymagane?              | PDF, HTML, TXT, MD.                                                                    | -                                                 |
+| Jakie platformy do spotkań mają być wspierane?   | Zoom, Microsoft Teams, Google Meet.                                                    | Możliwość rozbudowy o inne platformy.             |
+| Czy aplikacja powinna działać automatycznie?     | Tak, z automatycznym uruchamianiem na podstawie wydarzeń w kalendarzu.                 | Integracja z kalendarzem.                         |
+| Czy raporty mają być wysyłane automatycznie?     | Tak, e-mailem do uczestników spotkania.                                                | Do omówienia dokładny system mailowy.             |
+| Czy aplikacja ma identyfikować mówców?           | Tak, to opcjonalna funkcjonalność (nice to have).                                      | Może wymagać zaawansowanego przetwarzania danych. |
+| Czy potrzebne są dodatkowe analizy statystyczne? | Tak, opcjonalnie analiza ilości i szybkości wypowiedzi uczestników.                    | Do omówienia z klientem.                          |
+
 
 
 ## 3. Funkcjonalności
 
-| Funkcjonalność                        | Opis                                                                                      | Uwagi                          |
-|--------------------------------------|------------------------------------------------------------------------------------------|--------------------------------|
-| Transkrypcja tekstu mówionego        | Automatyczna zamiana mowy na tekst.                                                      | -                              |
-| Zapis zrzutu ekranu                  | Możliwość zapisu prezentacji udostępnianej przez dowolnego użytkownika.                  | -                              |
-| OCR - Optical Character Recognition  | Rozpoznawanie tekstu w obrazach, np. z whiteboarda.                                      | -                              |
-| Generowanie notatki ze spotkania     | Eksport notatek w formatach: PDF, HTML, TXT, MD.                                         | -                              |
-| Raport po spotkaniu                  | Automatyczne wysyłanie raportu e-mailem do uczestników.                                  | SEND IN BLUE(Brevo), MARGUN   |
-| Integracja z kalendarzem             | Automatyczne uruchamianie nagrywania na podstawie zaplanowanych wydarzeń.                | -                              |
-| Wsparcie dla platform                | Obsługa Zoom, Microsoft Teams, Google Meet.                                              | -                              |
-| Identyfikacja mówców                 | Przypisywanie wypowiedzi do konkretnych osób.                                            | Opcjonalnie - "nice to have". |
-| Podsumowanie notatek                 | Wyciąganie kluczowych informacji.                                                        | -                              |
-| Wyszukiwanie w notatkach             | Szybkie znajdowanie konkretnych treści.                                                  | -                              |
-| Statystyki wypowiedzi                | Analiza ilości i szybkości wypowiedzi uczestników.                                       | Opcjonalnie - "nice to have". |
+| Funkcjonalność                      | Opis                                                                      | Uwagi                          |
+|-------------------------------------|---------------------------------------------------------------------------|--------------------------------|
+| Transkrypcja tekstu mówionego       | Automatyczna zamiana mowy na tekst.                                       | -                              |
+| Zapis zrzutu ekranu                 | Możliwość zapisu prezentacji udostępnianej przez dowolnego użytkownika.   | -                              |
+| OCR - Optical Character Recognition | Rozpoznawanie tekstu w obrazach, np. z whiteboarda.                       | -                              |
+| Generowanie notatki ze spotkania    | Eksport notatek w formatach: PDF, HTML, TXT, MD.                          | -                              |
+| Raport po spotkaniu                 | Automatyczne wysyłanie raportu e-mailem do uczestników.                   | SEND IN BLUE(Brevo), MARGUN    |
+| Integracja z kalendarzem            | Automatyczne uruchamianie nagrywania na podstawie zaplanowanych wydarzeń. | -                              |
+| Wsparcie dla platform               | Obsługa Zoom, Microsoft Teams, Google Meet.                               | -                              |
+| Identyfikacja mówców                | Przypisywanie wypowiedzi do konkretnych osób.                             | Opcjonalnie - "nice to have".  |
+| Podsumowanie notatek                | Wyciąganie kluczowych informacji.                                         | -                              |
+| Wyszukiwanie w notatkach            | Szybkie znajdowanie konkretnych treści.                                   | -                              |
+| Statystyki wypowiedzi               | Analiza ilości i szybkości wypowiedzi uczestników.                        | Opcjonalnie - "nice to have".  |
+
 
 
 ## 4. Ustalony format danych wejściowych
@@ -249,9 +255,15 @@ sequenceDiagram
 ### 7. Sugerowany Stack technologiczny :
 
 <div style="display: flex; align-items: center; gap: 10px;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Python-logo-notext.svg" alt="Python" width="140" height="140">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" alt="PostgreSQL" width="140" height="140"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Flask_logo.svg/2560px-Flask_logo.svg.png" alt="Flask" width="140" height="140">
+    <a href="https://www.python.org/" target="_blank" rel="noreferrer">
+        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="85" height="85"/>
+    </a>
+    <a href="https://www.postgresql.org/" target="_blank" rel="noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" alt="PostgreSQL" width="85" height="85"/>
+    </a>
+    <a href="https://flask.palletsprojects.com/" target="_blank" rel="noreferrer">
+        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flask/flask-original.svg" alt="Flask" width="85" height="85"/>
+    </a>
 </div>
 
 #### Uzasadnienie wyboru technologii
