@@ -10,7 +10,7 @@
 
 | Kompetencje                                             | Zofia | Marta | Paweł |
 |---------------------------------------------------------|-------|-------|-------|
-| Bazy Danych SQL                                         | ❌    | ❌    | ❌    |
+| Bazy Danych SQL                                         | ❌    | ✅    | ❌    |
 | Bazy Danych NoSQL                                       | ❌    | ❌    | ❌    |
 | Znajomość technologii AI/ML                             | ✅    | ✅    | ❌    |
 | Znajomość narzędzi OCR                                  | ✅    | ✅    | ❌    |
@@ -19,10 +19,10 @@
 | Znajomość WebRTC                                        | ❌    | ❌    | ❌    |
 | Tworzenie wtyczek do przeglądarek (Chrome, Firefox)     | ❌    | ❌    | ❌    |
 | Znajomość Flask / Django                                | ❌    | ❌    | ❌    |
-| Znajomość Node.js, Express.js                           | ❌    | ❌    | ❌    |
+| Znajomość Node.js, Express.js                           | ❌    | ✅    | ❌    |
 | Znajomość Java Spring                                   | ❌    | ❌    | ❌    |
-| Frontend Frameworks (Vue.js, Angular, React)            | ❌    | ❌    | ❌    |
-| Znajomość TypeScript                                    | ❌    | ❌    | ❌    |
+| Frontend Frameworks (Vue.js, Angular, React)            | ❌    | ✅    | ❌    |
+| Znajomość TypeScript                                    | ❌    | ✅    | ❌    |
 | DevOps / CI/CD (GitHub Actions)                         | ❌    | ❌    | ❌    |
 | Praca z chmurą (AWS, GCP, Azure)                        | ❌    | ❌    | ❌    |
 | Konteneryzacja - Docker                                 | ❌    | ❌    | ❌    |
