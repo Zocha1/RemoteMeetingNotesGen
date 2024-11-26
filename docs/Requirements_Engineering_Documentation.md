@@ -10,19 +10,19 @@
 
 | Kompetencje                                             | Zofia | Marta | Paweł |
 |---------------------------------------------------------|-------|-------|-------|
-| Bazy Danych SQL                                         | ❌    | ✅    | ❌    |
+| Bazy Danych SQL                                         | ✅    | ✅    | ❌    |
 | Bazy Danych NoSQL                                       | ❌    | ❌    | ❌    |
 | Znajomość technologii AI/ML                             | ✅    | ✅    | ❌    |
 | Znajomość narzędzi OCR                                  | ✅    | ✅    | ❌    |
 | Znajomość PyTorch / TensorFlow                          | ✅    | ✅    | ❌    |
-| Znajomość platformy Hugging Face                        | ❌    | ❌    | ❌    |
+| Znajomość platformy Hugging Face                        | ✅    | ❌    | ❌    |
 | Znajomość WebRTC                                        | ❌    | ❌    | ❌    |
 | Tworzenie wtyczek do przeglądarek (Chrome, Firefox)     | ❌    | ❌    | ❌    |
 | Znajomość Flask / Django                                | ❌    | ❌    | ❌    |
 | Znajomość Node.js, Express.js                           | ❌    | ✅    | ❌    |
 | Znajomość Java Spring                                   | ❌    | ❌    | ❌    |
-| Frontend Frameworks (Vue.js, Angular, React)            | ❌    | ✅    | ❌    |
-| Znajomość TypeScript                                    | ❌    | ✅    | ❌    |
+| Frontend Frameworks (Vue.js, Angular, React)            | ✅    | ✅    | ❌    |
+| Znajomość TypeScript                                    | ✅    | ✅    | ❌    |
 | DevOps / CI/CD (GitHub Actions)                         | ❌    | ❌    | ❌    |
 | Praca z chmurą (AWS, GCP, Azure)                        | ❌    | ❌    | ❌    |
 | Konteneryzacja - Docker                                 | ❌    | ❌    | ❌    |
@@ -32,7 +32,7 @@
 | Praca z narzędziami analitycznymi (ElasticSearch, Kibana)| ❌    | ❌    | ❌    |
 | Integracja z modelami generatywnymi (ChatGPT, Gemini AI, Cloud AI) | ❌ | ❌ | ❌ |
 | Integracja z kalendarzami (Google, Outlook)             | ❌    | ❌    | ❌    |
-| Project Management                                      | ❌    | ❌    | ❌    |
+| Project Management                                      | ✅    | ❌    | ❌    |
 
 
 ## 2. Zestaw pytań dotyczących wymagań
