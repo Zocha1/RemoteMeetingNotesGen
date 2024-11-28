@@ -10,22 +10,22 @@
 
 | Kompetencje                                             | Zofia | Marta | Paweł |
 |---------------------------------------------------------|-------|-------|-------|
-| Bazy Danych SQL                                         | ✅    | ✅    | ❌    |
+| Bazy Danych SQL                                         | ✅    | ✅    | ✅    |
 | Bazy Danych NoSQL                                       | ❌    | ❌    | ❌    |
 | Znajomość technologii AI/ML                             | ✅    | ✅    | ❌    |
 | Znajomość narzędzi OCR                                  | ✅    | ✅    | ❌    |
 | Znajomość PyTorch / TensorFlow                          | ✅    | ✅    | ❌    |
-| Znajomość platformy Hugging Face                        | ✅    | ❌    | ❌    |
+| Znajomość platformy Hugging Face                        | ✅    | ❌    | ✅    |
 | Znajomość WebRTC                                        | ❌    | ❌    | ❌    |
-| Tworzenie wtyczek do przeglądarek (Chrome, Firefox)     | ❌    | ❌    | ❌    |
-| Znajomość Flask / Django                                | ❌    | ❌    | ❌    |
-| Znajomość Node.js, Express.js                           | ❌    | ✅    | ❌    |
+| Tworzenie wtyczek do przeglądarek (Chrome, Firefox)     | ❌    | ❌    | ✅    |
+| Znajomość Flask / Django                                | ❌    | ❌    | ✅    |
+| Znajomość Node.js, Express.js                           | ❌    | ✅    | ✅    |
 | Znajomość Java Spring                                   | ❌    | ❌    | ❌    |
-| Frontend Frameworks (Vue.js, Angular, React)            | ✅    | ✅    | ❌    |
+| Frontend Frameworks (Vue.js, Angular, React)            | ✅    | ✅    | ✅    |
 | Znajomość TypeScript                                    | ✅    | ✅    | ❌    |
-| DevOps / CI/CD (GitHub Actions)                         | ❌    | ❌    | ❌    |
-| Praca z chmurą (AWS, GCP, Azure)                        | ❌    | ❌    | ❌    |
-| Konteneryzacja - Docker                                 | ❌    | ❌    | ❌    |
+| DevOps / CI/CD (GitHub Actions)                         | ❌    | ❌    | ✅    |
+| Praca z chmurą (AWS, GCP, Azure)                        | ❌    | ❌    | ✅    |
+| Konteneryzacja - Docker                                 | ❌    | ❌    | ✅    |
 | Testowanie (unit, integracyjne)                         | ❌    | ❌    | ❌    |
 | Postman (testowanie API)                                | ❌    | ❌    | ❌    |
 | Praca z API do transkrypcji mowy (np. Google Cloud, AWS)| ❌    | ❌    | ❌    |
