@@ -10,29 +10,29 @@
 
 | Kompetencje                                             | Zofia | Marta | Paweł |
 |---------------------------------------------------------|-------|-------|-------|
-| Bazy Danych SQL                                         | ✅    | ✅    | ✅    |
-| Bazy Danych NoSQL                                       | ❌    | ❌    | ❌    |
-| Znajomość technologii AI/ML                             | ✅    | ✅    | ❌    |
-| Znajomość narzędzi OCR                                  | ✅    | ✅    | ❌    |
-| Znajomość PyTorch / TensorFlow                          | ✅    | ✅    | ❌    |
-| Znajomość platformy Hugging Face                        | ✅    | ❌    | ✅    |
-| Znajomość WebRTC                                        | ❌    | ❌    | ❌    |
-| Tworzenie wtyczek do przeglądarek (Chrome, Firefox)     | ❌    | ❌    | ✅    |
-| Znajomość Flask / Django                                | ❌    | ❌    | ✅    |
-| Znajomość Node.js, Express.js                           | ❌    | ✅    | ✅    |
-| Znajomość Java Spring                                   | ❌    | ❌    | ❌    |
-| Frontend Frameworks (Vue.js, Angular, React)            | ✅    | ✅    | ✅    |
-| Znajomość TypeScript                                    | ✅    | ✅    | ❌    |
-| DevOps / CI/CD (GitHub Actions)                         | ❌    | ❌    | ✅    |
-| Praca z chmurą (AWS, GCP, Azure)                        | ❌    | ❌    | ✅    |
-| Konteneryzacja - Docker                                 | ❌    | ❌    | ✅    |
-| Testowanie (unit, integracyjne)                         | ❌    | ❌    | ❌    |
-| Postman (testowanie API)                                | ❌    | ❌    | ❌    |
-| Praca z API do transkrypcji mowy (np. Google Cloud, AWS)| ❌    | ❌    | ❌    |
-| Praca z narzędziami analitycznymi (ElasticSearch, Kibana)| ❌    | ❌    | ❌    |
-| Integracja z modelami generatywnymi (ChatGPT, Gemini AI, Cloud AI) | ❌ | ❌ | ❌ |
-| Integracja z kalendarzami (Google, Outlook)             | ❌    | ❌    | ❌    |
-| Project Management                                      | ✅    | ❌    | ❌    |
+| Bazy Danych SQL                                         | ✅    | ✅    | ✅   |
+| Bazy Danych NoSQL                                       | ❌    | ❌    | ✅   |
+| Znajomość technologii AI/ML                             | ✅    | ✅    | ❌   |
+| Znajomość narzędzi OCR                                  | ✅    | ✅    | ❌   |
+| Znajomość PyTorch / TensorFlow                          | ✅    | ✅    | ❌   |
+| Znajomość platformy Hugging Face                        | ✅    | ❌    | ❌   |
+| Znajomość WebRTC                                        | ❌    | ❌    | ❌   |
+| Tworzenie wtyczek do przeglądarek (Chrome, Firefox)     | ❌    | ❌    | ✅   |
+| Znajomość Flask / Django                                | ❌    | ❌    | ✅   |
+| Znajomość Node.js, Express.js                           | ❌    | ✅    | ❌   |
+| Znajomość Java Spring                                   | ❌    | ❌    | ❌   |
+| Frontend Frameworks (Vue.js, Angular, React)            | ✅    | ✅    | ❌   |
+| Znajomość TypeScript                                    | ✅    | ✅    | ❌   |
+| DevOps / CI/CD (GitHub Actions)                         | ❌    | ❌    | ✅   |
+| Praca z chmurą (AWS, GCP, Azure)                        | ❌    | ❌    | ✅   |
+| Konteneryzacja - Docker                                 | ❌    | ❌    | ✅   |
+| Testowanie (unit, integracyjne)                         | ❌    | ❌    | ❌   |
+| Postman (testowanie API)                                | ❌    | ❌    | ✅   |
+| Praca z API do transkrypcji mowy (np. Google Cloud, AWS)| ❌    | ❌    | ❌   |
+| Praca z narzędziami analitycznymi (ElasticSearch, Kibana)| ❌   | ❌    | ❌   |
+| Integracja z modelami generatywnymi (ChatGPT, Gemini AI, Cloud AI) | ❌ | ❌ | ✅ |
+| Integracja z kalendarzami (Google, Outlook)             | ❌    | ❌   | ❌    |
+| Project Management                                      | ✅    | ❌   | ❌    |
 
 
 ## 2. Zestaw pytań dotyczących wymagań
@@ -40,15 +40,14 @@
 | Pytanie                                          | Odpowiedź                                                                              | Uwagi                                             |
 |--------------------------------------------------|----------------------------------------------------------------------------------------|---------------------------------------------------|
 | Jaka ma to być aplikacja? Webowa czy Desktopowa? | Webowa lub plugin do przeglądarki.                                                     | Powinna działać niezależnie od narzędzia do telekonferencji. |
-| Czy aplikacja wymaga logowania?                  | Nie wspomniano, ale jest to raczej oczywiste.                                          | Warto omówić na spotkaniu.                        |
 | Ilu użytkowników będzie korzystać z aplikacji?   | Nieokreślona liczba, zakładamy wsparcie dla dowolnej liczby uczestników w spotkaniach. | Skalowalność.                                     |
 | Jakie dane mają być przetwarzane?                | Transkrypcja mowy, zrzuty ekranu, treści OCR, identyfikacja mówców.                    | -                                                 |
 | Jakie formaty eksportu są wymagane?              | PDF, HTML, TXT, MD.                                                                    | -                                                 |
 | Jakie platformy do spotkań mają być wspierane?   | Zoom, Microsoft Teams, Google Meet.                                                    | Możliwość rozbudowy o inne platformy.             |
 | Czy aplikacja powinna działać automatycznie?     | Tak, z automatycznym uruchamianiem na podstawie wydarzeń w kalendarzu.                 | Integracja z kalendarzem.                         |
-| Czy raporty mają być wysyłane automatycznie?     | Tak, e-mailem do uczestników spotkania.                                                | Do omówienia dokładny system mailowy.             |
+| Czy raporty mają być wysyłane automatycznie?     | Tak, e-mailem do uczestników spotkania.                                                | SEND IN BLUE(Brevo), MARGUN                       |
 | Czy aplikacja ma identyfikować mówców?           | Tak, to opcjonalna funkcjonalność (nice to have).                                      | Może wymagać zaawansowanego przetwarzania danych. |
-| Czy potrzebne są dodatkowe analizy statystyczne? | Tak, opcjonalnie analiza ilości i szybkości wypowiedzi uczestników.                    | Do omówienia z klientem.                          |
+| Czy potrzebne są dodatkowe analizy statystyczne? | Tak, opcjonalnie analiza ilości i szybkości wypowiedzi uczestników.                    | Nice to have - do omówienia z klientem.           |
 
 
 
@@ -74,125 +73,158 @@
 
 ### Struktura bazy danych:
 
-### Tabela: `users`:
+---
 
-| Kolumna       | Typ danych     | Opis                                              |
-| ------------- | -------------- | ------------------------------------------------- |
-| `id`          | `INT`          | Unikalny identyfikator użytkownika (klucz główny) |
-| `username`    | `VARCHAR(50)`  | Nazwa użytkownika                                 |
-| `password`    | `VARCHAR(255)` | Hash hasła                                        |
-| `email`       | `VARCHAR(100)` | Firmowy email użytkownika                         |
-| `role`        | `VARCHAR(10)`  | Rola użytkownika (`admin` albo `user`)            |
+### Tabela: `users`
+Przechowuje informacje o użytkownikach aplikacji.
+
+| Kolumna       | Typ danych      | Opis                                              |
+|---------------|-----------------|---------------------------------------------------|
+| `user_id`     | `INT`           | Unikalny identyfikator użytkownika (klucz główny) |
+| `name`        | `VARCHAR(100)`  | Imię i nazwisko użytkownika                       |
+| `email`       | `VARCHAR(100)`  | Adres e-mail użytkownika                          |
 
 #### Przykład danych wejściowych:
-
-| id  | username   | password                           | email                | role  |
-| --- | ---------- | ---------------------------------- | -------------------- | ----- |
-| 1   | admin      | $2y$10$abcdefghijkmnopqrstuvwxyz   | admin@example.com    | admin |
-| 2   | jsmith     | $2y$10$lmnopqrstuvwxyzabcdefghijk  | jsmith@example.com   | user  |
-| 3   | amiller    | $2y$10$zxywvutsrqponmlkjihgfedcba  | amiller@example.com  | user  |
+| user_id | name             | email                |
+|---------|------------------|----------------------|
+| 1       | Zofia            | zofia@example.com    |
+| 2       | Marta            | marta@example.com    |
+| 3       | Paweł            | pawel@example.com    |
 
 ---
 
 ### Tabela: `meetings`
+Przechowuje dane dotyczące spotkań.
 
-| Kolumna        | Typ danych     | Opis                                                   |
-| -------------- | -------------- | ------------------------------------------------------ |
-| `id`           | `INT`          | Unikalny identyfikator spotkania (klucz główny)         |
-| `title`        | `VARCHAR(100)` | Tytuł spotkania                                        |
-| `description`  | `TEXT`         | Opis spotkania                                         |
-| `start_time`   | `DATETIME`     | Data i godzina rozpoczęcia spotkania                   |
-| `end_time`     | `DATETIME`     | Data i godzina zakończenia spotkania                   |
-| `created_by`   | `INT`          | ID użytkownika, który utworzył spotkanie (klucz obcy) |
+| Kolumna         | Typ danych      | Opis                                              |
+|------------------|-----------------|---------------------------------------------------|
+| `meeting_id`     | `INT`           | Unikalny identyfikator spotkania (klucz główny)   |
+| `title`          | `VARCHAR(255)`  | Tytuł spotkania                                   |
+| `scheduled_time` | `DATETIME`      | Data i godzina zaplanowanego spotkania           |
+| `platform`       | `VARCHAR(50)`   | Platforma używana podczas spotkania (np. Zoom)   |
+| `created_by`     | `INT`           | ID użytkownika tworzącego spotkanie              |
 
 #### Przykład danych wejściowych:
+| meeting_id | title               | scheduled_time      | platform   | created_by |
+|------------|---------------------|---------------------|------------|------------|
+| 1          | Planowanie projektu | 2024-02-01 09:00:00 | Zoom       | 1          |
+| 2          | Warsztat OCR        | 2024-02-02 10:00:00 | Teams      | 2          |
+| 3          | Analiza AI          | 2024-02-03 11:00:00 | Meet       | 3          |
 
-| id  | title                 | description           | start_time           | end_time             | created_by |
-| --- | --------------------- | --------------------- | -------------------- | -------------------- | ---------- |
-| 1   | Spotkanie projektowe   | Omówienie postępu projektu | 2024-11-20 09:00:00 | 2024-11-20 10:00:00 | 1          |
-| 2   | Spotkanie zarządu      | Dyskusja na temat strategii | 2024-11-21 11:00:00 | 2024-11-21 12:30:00 | 2          |
-| 3   | Spotkanie z klientem   | Prezentacja wyników  | 2024-11-22 14:00:00 | 2024-11-22 15:00:00 | 3          |
+---
+
+### Tabela: `participants`
+Przechowuje relacje między użytkownikami a spotkaniami.
+
+| Kolumna           | Typ danych      | Opis                                             |
+|-------------------|-----------------|--------------------------------------------------|
+| `participant_id`  | `INT`           | Unikalny identyfikator uczestnictwa (klucz główny)|
+| `meeting_id`      | `INT`           | ID spotkania, w którym użytkownik uczestniczy    |
+| `user_id`         | `INT`           | ID użytkownika uczestniczącego w spotkaniu       |
+| `role`            | `VARCHAR(50)`   | Rola użytkownika w spotkaniu (`Host`, `Guest`)   |
+| `joined_at`       | `DATETIME`      | Czas dołączenia do spotkania                     |
+
+#### Przykład danych wejściowych:
+| participant_id | meeting_id | user_id | role         | joined_at           |
+|----------------|------------|---------|--------------|---------------------|
+| 1              | 1          | 1       | Host         | 2024-02-01 09:00:00 |
+| 2              | 1          | 2       | Participant  | 2024-02-01 09:05:00 |
+| 3              | 2          | 2       | Host         | 2024-02-02 10:00:00 |
+| 4              | 3          | 3       | Participant  | 2024-02-03 11:10:00 |
 
 ---
 
 ### Tabela: `transcriptions`
+Przechowuje pełne dane transkrypcji ze spotkań.
 
-| Kolumna          | Typ danych     | Opis                                                   |
-| ---------------- | -------------- | ------------------------------------------------------ |
-| `id`             | `INT`          | Unikalny identyfikator transkrypcji (klucz główny)      |
-| `meeting_id`     | `INT`          | ID spotkania (klucz obcy)                              |
-| `speaker_id`     | `INT`          | ID mówcy (klucz obcy do tabeli `users`)                |
-| `text`           | `TEXT`         | Zapis transkrypcji tekstu                              |
-| `timestamp`      | `DATETIME`     | Czas, w którym wypowiedź została zarejestrowana        |
+| Kolumna            | Typ danych      | Opis                                              |
+|---------------------|-----------------|---------------------------------------------------|
+| `transcription_id`  | `INT`           | Unikalny identyfikator transkrypcji (klucz główny)|
+| `meeting_id`        | `INT`           | ID spotkania, którego dotyczy transkrypcja        |
+| `full_text`         | `TEXT`          | Pełna treść transkrypcji                         |
+| `created_at`        | `DATETIME`      | Data i godzina wygenerowania transkrypcji        |
 
 #### Przykład danych wejściowych:
-
-| id  | meeting_id | speaker_id | text                            | timestamp           |
-| --- | ---------- | ---------- | ------------------------------- | ------------------- |
-| 1   | 1          | 1          | "Witam wszystkich na spotkaniu." | 2024-11-20 09:01:00 |
-| 2   | 1          | 2          | "Omówię postępy w projekcie."    | 2024-11-20 09:03:15 |
-| 3   | 2          | 3          | "Chciałbym przedstawić nasze cele." | 2024-11-21 11:05:00 |
+| transcription_id | meeting_id | full_text                                     | created_at          |
+|------------------|------------|-----------------------------------------------|---------------------|
+| 1                | 1          | "Witamy na spotkaniu. Omówimy harmonogram..."| 2024-02-01 12:00:00 |
+| 2                | 2          | "Zapraszam na warsztaty OCR. Rozpoczynamy od..." | 2024-02-02 14:00:00 |
+| 3                | 3          | "Analiza modeli AI. Przedstawiamy wyniki testów..."| 2024-02-03 15:00:00 |
 
 ---
 
-### Tabela: `screenshots`
 
-| Kolumna          | Typ danych     | Opis                                                   |
-| ---------------- | -------------- | ------------------------------------------------------ |
-| `id`             | `INT`          | Unikalny identyfikator zrzutu ekranu (klucz główny)     |
-| `meeting_id`     | `INT`          | ID spotkania (klucz obcy)                              |
-| `image_url`      | `VARCHAR(255)` | URL do obrazu zrzutu ekranu                             |
-| `timestamp`      | `DATETIME`     | Czas zrobienia zrzutu ekranu                            |
+### Tabela: `screenshots`
+Przechowuje zapisane obrazy ekranów ze spotkań.
+
+| Kolumna          | Typ danych      | Opis                                               |
+|------------------|-----------------|----------------------------------------------------|
+| `screenshot_id`  | `INT`           | Unikalny identyfikator zrzutu ekranu (klucz główny)|
+| `meeting_id`     | `INT`           | ID spotkania, w którym wykonano zrzut ekranu       |
+| `image_path`     | `VARCHAR(255)`  | Ścieżka do pliku ze zrzutem ekranu                 |
+| `timestamp`      | `DATETIME`      | Czas wykonania zrzutu ekranu                       |
 
 #### Przykład danych wejściowych:
-
-| id  | meeting_id | image_url                            | timestamp           |
-| --- | ---------- | ------------------------------------ | ------------------- |
-| 1   | 1          | "https://example.com/screenshot1.png" | 2024-11-20 09:10:00 |
-| 2   | 2          | "https://example.com/screenshot2.png" | 2024-11-21 11:10:00 |
-| 3   | 3          | "https://example.com/screenshot3.png" | 2024-11-22 14:20:00 |
+| screenshot_id | meeting_id | image_path            | timestamp           |
+|---------------|------------|-----------------------|---------------------|
+| 1             | 1          | /screenshots/1_01.png | 2024-02-01 09:30:00 |
+| 2             | 2          | /screenshots/2_01.png | 2024-02-02 10:45:00 |
+| 3             | 3          | /screenshots/3_01.png | 2024-02-03 11:20:00 |
 
 ---
 
 ### Tabela: `reports`
+Przechowuje dane o wygenerowanych raportach.
 
-| Kolumna         | Typ danych     | Opis                                                   |
-| --------------- | -------------- | ------------------------------------------------------ |
-| `id`            | `INT`          | Unikalny identyfikator raportu (klucz główny)           |
-| `meeting_id`    | `INT`          | ID spotkania (klucz obcy)                              |
-| `file_type`     | `VARCHAR(10)`  | Typ pliku (np. PDF, TXT, HTML, MD)                     |
-| `file_url`      | `VARCHAR(255)` | URL do wygenerowanego raportu                           |
-| `created_at`    | `DATETIME`     | Czas utworzenia raportu                                |
+| Kolumna       | Typ danych      | Opis                                              |
+|---------------|-----------------|---------------------------------------------------|
+| `report_id`   | `INT`           | Unikalny identyfikator raportu (klucz główny)     |
+| `meeting_id`  | `INT`           | ID spotkania, którego dotyczy raport              |
+| `file_path`   | `VARCHAR(255)`  | Ścieżka do pliku raportu                          |
+| `format`      | `VARCHAR(10)`   | Format raportu (np. PDF, TXT, MD)                 |
+| `created_at`  | `DATETIME`      | Data i godzina wygenerowania raportu              |
 
 #### Przykład danych wejściowych:
-
-| id  | meeting_id | file_type | file_url                             | created_at          |
-| --- | ---------- | --------- | ------------------------------------ | ------------------- |
-| 1   | 1          | PDF       | "https://example.com/report1.pdf"    | 2024-11-20 10:05:00 |
-| 2   | 2          | HTML      | "https://example.com/report2.html"   | 2024-11-21 12:35:00 |
-| 3   | 3          | MD        | "https://example.com/report3.md"     | 2024-11-22 15:05:00 |
+| report_id | meeting_id | file_path             | format  | created_at          |
+|-----------|------------|-----------------------|---------|---------------------|
+| 1         | 1          | /reports/meeting1.pdf | PDF     | 2024-02-01 12:00:00 |
+| 2         | 2          | /reports/meeting2.md  | MD      | 2024-02-02 14:00:00 |
+| 3         | 3          | /reports/meeting3.txt | TXT     | 2024-02-03 15:00:00 |
 
 ---
 
-### Tabela: `calendar_integration`
+### Tabela: `ocr`
+Przechowuje wyniki analizy OCR.
 
-| Kolumna         | Typ danych     | Opis                                                   |
-| --------------- | -------------- | ------------------------------------------------------ |
-| `id`            | `INT`          | Unikalny identyfikator wpisu (klucz główny)             |
-| `meeting_id`    | `INT`          | ID spotkania (klucz obcy)                              |
-| `calendar_event`| `VARCHAR(255)` | Identyfikator wydarzenia w kalendarzu (np. Google Calendar) |
-| `status`        | `VARCHAR(20)`  | Status integracji (np. 'Zakończono', 'W trakcie')      |
+| Kolumna          | Typ danych      | Opis                                              |
+|------------------|-----------------|---------------------------------------------------|
+| `ocr_id`         | `INT`           | Unikalny identyfikator wyniku OCR (klucz główny)  |
+| `screenshot_id`  | `INT`           | ID zrzutu ekranu, którego dotyczy analiza OCR     |
+| `text`           | `TEXT`          | Rozpoznany tekst                                  |
+| `confidence`     | `FLOAT`         | Poziom pewności rozpoznania tekstu (0-100)        |
 
 #### Przykład danych wejściowych:
+| ocr_id | screenshot_id | text                          | confidence |
+|--------|---------------|-------------------------------|------------|
+| 1      | 1             | "Plan projektu"              | 98.5       |
+| 2      | 2             | "Warsztaty"                  | 95.2       |
+| 3      | 3             | "Analiza modeli AI"          | 96.7       |
 
-| id  | meeting_id | calendar_event           | status   |
-| --- | ---------- | ------------------------ | -------- |
-| 1   | 1          | "event_id_12345"         | Zakończono |
-| 2   | 2          | "event_id_67890"         | W trakcie |
-| 3   | 3          | "event_id_54321"         | Zakończono |
 
 
-## 5. Diagram przypadków użycia
+## 5. Modelowanie systemu za pomocą tabeli i przepływ danych
+
+| **Aktorzy**      | Użytkownik końcowy, serwer aplikacji, analityk danych      |
+|-------------------|----------------------------------------------------------|
+| **Opis**         | Celem działania systemu jest przetwarzanie i analizowanie danych zdalnych spotkań, takich jak transkrypcje mowy, zrzuty ekranu oraz OCR. System generuje raporty oraz podsumowania, które są automatycznie wysyłane do uczestników. |
+| **Dane**         | Pliki dźwiękowe, obrazy (zrzuty ekranu, zdjęcia tablic), treść transkrypcji, dane uczestników spotkania, informacje z kalendarza. |
+| **Wyzwalacz**    | Rozpoczęcie spotkania zarejestrowanego w kalendarzu lub ręczne uruchomienie nagrywania przez użytkownika. |
+| **Odpowiedź**    | Raport z transkrypcją i zrzutami ekranu, statystyki wypowiedzi, podsumowanie kluczowych informacji, wykryte elementy OCR. |
+| **Uwagi**        | - Wysoka dokładność OCR oraz transkrypcji. <br> - Możliwość przetwarzania danych dla wielu platform telekonferencyjnych (Zoom, Teams, Google Meet). |
+
+
+
+## 6. Diagram przypadków użycia
 
 ```mermaid
 graph LR
@@ -215,7 +247,7 @@ graph LR
 
 ```
 
-## 6. Diagram sekwencyjny UML: 
+## 7. Diagram sekwencyjny UML: 
 
 ```mermaid
 sequenceDiagram
@@ -252,7 +284,7 @@ sequenceDiagram
 
 
 
-### 7. Sugerowany Stack technologiczny :
+### 8. Sugerowany Stack technologiczny :
 
 <div style="display: flex; align-items: center; gap: 10px;">
     <a href="https://www.python.org/" target="_blank" rel="noreferrer">
@@ -268,20 +300,11 @@ sequenceDiagram
 
 #### Uzasadnienie wyboru technologii
 
-**Python**
-- Python to idealny wybór do realizacji funkcji związanych z rozpoznawaniem mowy oraz przetwarzaniem tekstu. Dzięki bogatemu ekosystemowi bibliotek, takim jak `SpeechRecognition` do transkrypcji mowy, `spaCy` i `NLTK` do analizy językowej, oraz `Tesseract` do rozpoznawania tekstu w obrazach (OCR), Python zapewnia szerokie możliwości w zakresie przetwarzania języka naturalnego (NLP). 
+#### **Python**  
+Python został wybrany ze względu na bogaty ekosystem bibliotek wspierających kluczowe funkcjonalności projektu. SpeechRecognition umożliwi transkrypcję mowy, spaCy i NLTK posłużą do analizy językowej, a Tesseract OCR do rozpoznawania tekstu z obrazów. Python doskonale nadaje się do przetwarzania języka naturalnego (NLP) oraz integracji z systemami zewnętrznymi.
 
-**Flask**
-- Flask to lekki i elastyczny framework webowy w Pythonie, który świetnie nadaje się do budowy małych i średnich aplikacji backendowych. Jest bardziej minimalistyczny od Django, co daje większą kontrolę nad strukturą aplikacji i jej konfiguracją. Dzięki Flaskowi aplikacja może łatwiej integrować się z innymi systemami oraz dostarczać API do komunikacji z frontendem lub innymi usługami (np. Zoom, Google Meet). Flask będzie odpowiedzialny za logikę aplikacji, obsługę zapytań HTTP, zarządzanie sesjami użytkowników oraz obsługę wysyłania e-maili.
+#### **Flask**  
+Flask to lekki framework webowy, który umożliwia elastyczną budowę backendu. Jego prostota pozwala na szybkie tworzenie API, zarządzanie sesjami użytkowników oraz obsługę zapytań HTTP.
 
-**PostgreSQL**
-- PostgreSQL to relacyjna baza danych, która została wybrana ze względu na swoją niezawodność i wsparcie dla skomplikowanych zapytań. Jest w stanie przechowywać duże ilości danych (np. transkrypcji spotkań, informacje o użytkownikach, zapisy zrzutów ekranu, wyniki OCR) oraz zapewnia wysoką wydajność i bezpieczeństwo.
-
-**Tesseract (OCR)**
-- Tesseract to jedna z najlepszych bibliotek open-source do rozpoznawania tekstu w obrazach, której użyjemy do przetwarzania obrazów z tablic czy zrzutów ekranu, automatycznie ekstraktując tekst do wykorzystania w notatkach spotkań.
-
-**SpeechRecognition (Transkrypcja Mowy)**
-- `SpeechRecognition` to biblioteka Python, która pozwala na konwersję mowy na tekst. Będzie wykorzystywana do automatycznej transkrypcji spotkań, zapewniając płynne przekształcanie rozmów w tekst w czasie rzeczywistym.
-
-**Email Integration (Send in Blue, SMTP)**
-- Backend będzie obsługiwał automatyczne generowanie raportów po spotkaniach i ich wysyłanie do uczestników. Do tej funkcji użyjemy popularnych narzędzi do wysyłania e-maili, takich jak Sendinblue (Brevo) lub SMTP do wysyłania powiadomień po zakończeniu sesji.
+#### **PostgreSQL**  
+PostgreSQL to niezawodna baza danych relacyjnych, która zapewnia wysoką wydajność i bezpieczeństwo. Sprawdzi się w przechowywaniu danych, takich jak transkrypcje, informacje o użytkownikach, zrzuty ekranu i wyniki OCR, wspierając zaawansowane zapytania i skalowalność systemu.
