@@ -1,49 +1,57 @@
+/* Body settings */
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f4f9;
-    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f1f8ff; /* Light blue background */
     color: #333;
-    width: 700px;  
-    height: 550px;
+    padding: 20px;
+    margin: 0;
 }
 
+/* Center content for both pages */
 .container {
-    text-align: center;
-    padding: 30px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+    background-color: #ffffff; /* White background for content */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Title styling */
 h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #007BFF;
+    color: #007BFF; /* Soft blue */
+    font-weight: 600;
 }
 
-button {
-    width: 200px;
+/* Button styling */
+button, .btn {
+    font-size: 18px;
     padding: 12px;
-    margin: 10px;
-    font-size: 16px;
-    color: white;
-    background-color: #007BFF;
+    border-radius: 8px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    opacity: 0.9;
 }
 
-button:active {
-    background-color: #004085;
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
+}
+
+/* Adding some spacing between elements */
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+/* Form inputs */
+.form-control {
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    padding: 12px;
+}
+
+.form-control:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }

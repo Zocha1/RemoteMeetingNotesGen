@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan Recording</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="container py-4" style="min-width: 350px; max-width: 500px;">
+    <h1 class="text-center text-primary mb-4" style="font-size: 28px;">Plan Recording</h1>
+    <form id="planRecordingForm">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email addresses</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter emails separated by commas" required>
+      </div>
+      <div class="mb-3">
+        <label for="date" class="form-label">Date and Time</label>
+        <input type="datetime-local" class="form-control" id="date" required>
+      </div>
+      <button type="submit" class="btn btn-lg btn-primary w-100">Save Plan</button>
+    </form>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

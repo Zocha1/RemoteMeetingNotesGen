@@ -1,16 +1,22 @@
 {
-    "name": "Screen Capture Extension",
-    "description": "Extension for screen recording and screenshot capture",
-    "version": "1.0",
-    "manifest_version": 3,
-    "permissions": [
-      "activeTab",
-      "desktopCapture",
-      "windows"
-    ],
-    "action": {
-      "default_popup": "/src/index.html",
-      "default_icon": "/assets/icon.png"
-    }
-  }
-  
+  "name": "Screen Capture Extension",
+  "description": "Extension for screen recording and screenshot capture",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "desktopCapture",
+    "windows"
+  ],
+  "background": {
+    "service_worker": "/src/background.js"
+  },
+  "action": {
+    "default_popup": "/src/index.html",
+    "default_icon": "/assets/icon.png"
+  },
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ]
+}
