@@ -8,3 +8,7 @@ dist/
 htmlcov/
 .tox/
 docs/_build/
+resources/
+/extension/assets/bootstrap*.css
+/extension/assets/bootstrap*.js
+/extension/assets/jquery*.js
