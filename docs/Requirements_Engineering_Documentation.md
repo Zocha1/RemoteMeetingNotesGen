@@ -45,9 +45,9 @@
 | Jakie formaty eksportu są wymagane?              | PDF, HTML, TXT, MD.                                                                    | -                                                 |
 | Jakie platformy do spotkań mają być wspierane?   | Zoom, Microsoft Teams, Google Meet.                                                    | Możliwość rozbudowy o inne platformy.             |
 | Czy aplikacja powinna działać automatycznie?     | Tak, z automatycznym uruchamianiem na podstawie wydarzeń w kalendarzu.                 | Integracja z kalendarzem.                         |
-| Czy raporty mają być wysyłane automatycznie?     | Tak, e-mailem do uczestników spotkania.                                                | SEND IN BLUE(Brevo), MARGUN                       |
-| Czy aplikacja ma identyfikować mówców?           | Tak, to opcjonalna funkcjonalność (nice to have).                                      | Może wymagać zaawansowanego przetwarzania danych. |
-| Czy potrzebne są dodatkowe analizy statystyczne? | Tak, opcjonalnie analiza ilości i szybkości wypowiedzi uczestników.                    | Nice to have - do omówienia z klientem.           |
+| Czy raporty mają być wysyłane automatycznie?     | Tak, e-mailem do uczestników spotkania.                                                | Brevo (ex Sendinblue), Margin                       |
+| Czy aplikacja ma identyfikować mówców?           | Tak, to opcjonalna funkcjonalność.                                      | Może wymagać zaawansowanego przetwarzania danych. |
+| Czy potrzebne są dodatkowe analizy statystyczne? | Tak, opcjonalnie analiza ilości i szybkości wypowiedzi uczestników.                    | So omówienia z klientem.           |
 
 
 
