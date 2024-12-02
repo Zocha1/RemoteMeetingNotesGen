@@ -59,7 +59,7 @@
 | Zapis zrzutu ekranu                 | Możliwość zapisu prezentacji udostępnianej przez dowolnego użytkownika.   | -                              |
 | OCR - Optical Character Recognition | Rozpoznawanie tekstu w obrazach, np. z whiteboarda.                       | -                              |
 | Generowanie notatki ze spotkania    | Eksport notatek w formatach: PDF, HTML, TXT, MD.                          | -                              |
-| Raport po spotkaniu                 | Automatyczne wysyłanie raportu e-mailem do uczestników.                   | SEND IN BLUE(Brevo), MARGUN    |
+| Raport po spotkaniu                 | Automatyczne wysyłanie raportu e-mailem do uczestników.                   | Brevo (ex Sendinblue), Margin  |
 | Integracja z kalendarzem            | Automatyczne uruchamianie nagrywania na podstawie zaplanowanych wydarzeń. | -                              |
 | Wsparcie dla platform               | Obsługa Zoom, Microsoft Teams, Google Meet.                               | -                              |
 | Identyfikacja mówców                | Przypisywanie wypowiedzi do konkretnych osób.                             | Opcjonalnie - "nice to have".  |
