@@ -6,7 +6,7 @@ import os
 # Define Blueprint
 main_routes = Blueprint('main', __name__)
 
-@main_routes.route('/upload', methods=['POST'])
+@main_routes.route('/upload-screenshot', methods=['POST'])
 def upload_screenshot():
     data = request.get_json()
     if 'image' not in data:
@@ -28,6 +28,18 @@ def upload_screenshot():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@main_routes.route('/upload-audio', methods=['POST'])
+def upload_audio():
+    if 'audio' not in request.files:
+        return jsonify({'error': 'No audio file provided'}), 400
+
+    audio_file = request.files['audio']
+    upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], audio_file.filename)
+    audio_file.save(upload_path)
+
+    return jsonify({'message': 'Audio file saved successfully', 'file_path': upload_path})
+
 
 @main_routes.route('/plan-recording', methods=['POST'])
 def plan_recording():

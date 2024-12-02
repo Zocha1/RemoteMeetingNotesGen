@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "desktopCapture",
-    "windows"
+    "windows",
+    "tabCapture"
   ],
   "background": {
     "service_worker": "/src/background.js"
