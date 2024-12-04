@@ -12,3 +12,4 @@ resources/
 /extension/assets/bootstrap*.css
 /extension/assets/bootstrap*.js
 /extension/assets/jquery*.js
+backend/flask_api/mydb.db
