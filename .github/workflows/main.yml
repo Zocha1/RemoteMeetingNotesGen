@@ -1,0 +1,44 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest 
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # - name: Set up Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: 3.12  
+    
+    - name: Use Pre-installed Python
+      run: python --version
+
+    - name: Install dependencies
+      run: |
+        echo "Setting up virtual environment and installing dependencies..."
+        python -m venv venv  
+        source venv/bin/activate 
+        pip install -r requirements.txt  
+
+    - name: Run tests
+      run: |
+        source venv/bin/activate  
+        pytest tests/backend/ --maxfail=3 --tb=short > pytest-output.log
+    
+    - name: Upload test logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: pytest-results
+        path: pytest-output.log
