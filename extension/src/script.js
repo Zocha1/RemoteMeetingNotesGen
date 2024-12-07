@@ -7,6 +7,10 @@ document.getElementById('plan-recording').addEventListener('click', function() {
   chrome.tabs.create({ url: 'http://localhost:5000/recording' });
 });
 
+document.getElementById('manage-notes').addEventListener('click', function() {
+  chrome.tabs.create({ url: 'http://localhost:5000/notes' });
+});
+
 // Function to start screen recording
 function startRecording() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
