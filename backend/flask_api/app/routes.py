@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, render_template
 import base64
 from datetime import datetime
 import os
@@ -54,3 +54,17 @@ def plan_recording():
     # schedule_recording(email, date)
 
     return jsonify({'message': 'Recording scheduled successfully!'})
+
+
+
+@main_routes.route('/')
+def index():
+    return render_template('base.html')
+
+@main_routes.route('/recording')
+def recording():
+    return render_template('recording.html')
+
+@main_routes.route('/notes')
+def notes():
+    return render_template('notes.html')
