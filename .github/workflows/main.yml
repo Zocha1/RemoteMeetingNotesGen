@@ -23,13 +23,21 @@ jobs:
     
     - name: Use Pre-installed Python
       run: python --version
+    
+    - name: Debug - List directory contents
+      run: |
+        echo "Listing root directory contents:"
+        ls -la
+        echo "Listing backend directory contents:"
+        ls -la backend
+    
 
     - name: Install dependencies
       run: |
         echo "Setting up virtual environment and installing dependencies..."
         python -m venv venv  
         source venv/bin/activate 
-        pip install -r /backend/requirements.txt  
+        pip install -r backend/requirements.txt  
 
     - name: Run tests
       run: |
