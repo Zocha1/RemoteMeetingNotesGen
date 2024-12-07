@@ -3,6 +3,10 @@ document.getElementById('start-recording').addEventListener('click', startRecord
 document.getElementById('stop-recording').addEventListener('click', stopRecording);
 document.getElementById('take-screenshot').addEventListener('click', takeScreenshot);
 
+document.getElementById('plan-recording').addEventListener('click', function() {
+  chrome.tabs.create({ url: 'http://localhost:5000/recording' });
+});
+
 // Function to start screen recording
 function startRecording() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
