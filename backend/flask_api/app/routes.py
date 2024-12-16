@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app, render_template
 import base64
 from datetime import datetime
 import os
+from .models import *
 
 # Define Blueprint
 main_routes = Blueprint('main', __name__)
@@ -41,20 +42,50 @@ def upload_audio():
     return jsonify({'message': 'Audio file saved successfully', 'file_path': upload_path})
 
 
-@main_routes.route('/plan-recording', methods=['POST'])
-def plan_recording():
+# @main_routes.route('/plan-recording', methods=['POST'])
+# def plan_recording():
+#     data = request.get_json()
+#     email = data.get('email')
+#     date = data.get('date')
+
+#     if not email or not date:
+#         return jsonify({'error': 'Email and date are required'}), 400
+
+#     # Example: Save the plan to a database or file (logic not implemented here)
+#     # schedule_recording(email, date)
+
+#     return jsonify({'message': 'Recording scheduled successfully!'})
+
+@main_routes.route('/add-meeting', methods=['POST'])
+def add_meeting():
     data = request.get_json()
-    email = data.get('email')
-    date = data.get('date')
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
 
-    if not email or not date:
-        return jsonify({'error': 'Email and date are required'}), 400
+    title = data.get('title')
+    scheduled_time_str = data.get('scheduled_time')
+    platform = data.get('platform')
 
-    # Example: Save the plan to a database or file (logic not implemented here)
-    # schedule_recording(email, date)
+    if not all([title, scheduled_time_str, platform]):
+        return jsonify({'error': 'Title, scheduled_time, and platform are required'}), 400
 
-    return jsonify({'message': 'Recording scheduled successfully!'})
+    try:
+        # Convert scheduled_time from string to datetime
+        scheduled_time = datetime.fromisoformat(scheduled_time_str)
+        # Create a new meeting
+        new_meeting = Meetings(title=title, scheduled_time=scheduled_time, platform=platform)
 
+        db.session.add(new_meeting)
+        db.session.commit()
+        return jsonify({'message': 'Meeting added successfully', 'meeting_id': new_meeting.meeting_id}), 201  # 201 Created
+    
+    except ValueError as e:
+        return jsonify({'error': f'Invalid datetime format. Use ISO format (YYYY-MM-DDTHH:MM:SS): {str(e)}'}), 400 # 400 Bad Request
+    
+    except Exception as e:
+        db.session.rollback() # rollback if error
+        return jsonify({'error': f'Error while creating meeting: {str(e)}'}), 500 # 500 Internal Server Error
+    
 
 
 @main_routes.route('/')

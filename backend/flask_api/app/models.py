@@ -1,25 +1,22 @@
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, DateTime, Text, Float
-# from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-import re
-import datetime
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-Base = declarative_base()
+import re
+
+db = SQLAlchemy()
 
 def is_valid_email(email):
     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     return re.match(email_regex, email) is not None
 
-class Users(Base):
+class Users(db.Model):
     __tablename__ = "users"
     
-    user_id = Column("userid", Integer, primary_key = True, autoincrement = True)
-    firstname = Column("firstname", CHAR)
-    lastname = Column("lastname", CHAR)
-    email = Column("email", String, unique = True)
+    user_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    firstname = db.Column(db.String(50))
+    lastname = db.Column(db.String(50))
+    email = db.Column(db.String(120), unique=True)
 
-    
     def __init__(self, firstname, lastname, email):
         if not is_valid_email(email):
             raise ValueError(f"Invalid email address: {email}")
@@ -30,33 +27,31 @@ class Users(Base):
     def __repr__(self):
         return f"{self.user_id}, {self.firstname} {self.lastname}, {self.email}"
     
-class Meetings(Base):
+class Meetings(db.Model):
     __tablename__ = "meetings"
     
-    meeting_id = Column("mid", Integer, primary_key = True, autoincrement = True)
-    title = Column("title", CHAR)
-    scheduled_time = Column("scheduledtime", DateTime)
-    platform = Column("platform", CHAR)
-    created_by = Column("createdby", Integer, ForeignKey('users.userid'))
+    meeting_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100))
+    scheduled_time = db.Column(db.DateTime)
+    platform = db.Column(db.String(50))
     
-    def __init__(self, title, scheduled_time, platform, created_by):
+    def __init__(self, title, scheduled_time, platform):
         self.title = title
         self.scheduled_time = scheduled_time
         self.platform = platform
-        self.created_by = created_by
     
     def __repr__(self):
-        return f"({self.meeting_id}), Title: {self.title}, Scheduled time: {self.scheduled_time}, Platform: {self.platform}, Created by: {self.created_by}"
+        return f"({self.meeting_id}), Title: {self.title}, Scheduled time: {self.scheduled_time}, Platform: {self.platform}"
     
 
-class Participants(Base):
+class Participants(db.Model):
     __tablename__ = "participants"
     
-    participant_id = Column("pid", Integer, primary_key = True, autoincrement = True)
-    meeting_id = Column("mid", Integer, ForeignKey('meetings.mid'))
-    user_id = Column("userid", Integer, ForeignKey('users.userid'))
-    role = Column("role", CHAR)
-    joined_at = Column("joined_at", DateTime)
+    participant_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.meeting_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    role = db.Column(db.String(50))
+    joined_at = db.Column(db.DateTime)
     
     def __init__(self, meeting_id, user_id, role, joined_at):
         self.meeting_id = meeting_id
@@ -68,13 +63,13 @@ class Participants(Base):
         return f"({self.participant_id}), Meeting ID: {self.meeting_id}, User ID: {self.user_id}, Role: {self.role}, Joined at: {self.joined_at}"
     
     
-class Transcriptions(Base):
+class Transcriptions(db.Model):
     __tablename__ = "transcriptions"
     
-    transcription_id = Column("tid", Integer, primary_key = True, autoincrement = True)
-    meeting_id = Column("mid", Integer, ForeignKey('meetings.mid'))
-    full_text = Column("transcription", Text)
-    created_at = Column("created_at", DateTime)
+    transcription_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.meeting_id'))
+    full_text = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, meeting_id, full_text, created_at):
         self.meeting_id = meeting_id
@@ -85,13 +80,13 @@ class Transcriptions(Base):
         return f"({self.transcription_id}), Meeting ID: {self.meeting_id}, Trnascription: {self.full_text}, Created at: {self.created_at}"
     
 
-class Screenshots(Base):
+class Screenshots(db.Model):
     __tablename__ = "screenshots"
     
-    screenshot_id = Column("scid", Integer, primary_key = True, autoincrement = True)
-    meeting_id = Column("mid", Integer, ForeignKey('meetings.mid'))
-    image_path = Column("image_path", CHAR)
-    timestamp = Column('timestamp', DateTime)
+    screenshot_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.meeting_id'))
+    image_path = db.Column(db.String(200))
+    timestamp = db.Column(db.DateTime)
     
     def __init__(self, meeting_id, image_path, timestamp):
         self.meeting_id = meeting_id
@@ -101,14 +96,14 @@ class Screenshots(Base):
     def __repr__(self):
         return f"({self.screenshot_id}), Meeting ID: {self.meeting_id}, Image path: {self.image_path}, Created at: {self.timestamp}"
     
-class Reports(Base):
+class Reports(db.Model):
     __tablename__ = "reports"
     
-    report_id = Column("rid", Integer, primary_key = True, autoincrement = True)
-    meeting_id = Column("mid", Integer, ForeignKey('meetings.mid'))
-    file_path = Column("file_path", CHAR)
-    format = Column("format", CHAR)
-    created_at = Column("created_at", DateTime)
+    report_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.meeting_id'))
+    file_path = db.Column(db.String(200))
+    format = db.Column(db.String(20))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __init__(self, meeting_id, file_path, format, created_at):
         self.meeting_id = meeting_id
@@ -119,13 +114,13 @@ class Reports(Base):
     def __repr__(self):
         return f"({self.report_id}), Meeting ID: {self.meeting_id}, Path to report: {self.file_path}, Format: {self.format}, Created at: {self.created_at}"
     
-class OCR(Base):
+class OCR(db.Model):
     __tablename__  = "ocr"
     
-    ocr_id = Column("oid", Integer, primary_key = True, autoincrement = True)
-    screenshot_id = Column("scid", Integer, ForeignKey('screenshots.scid'))
-    text = Column("text", Text)
-    confidence = Column("confidence", Float)
+    ocr_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    screenshot_id = db.Column(db.Integer, db.ForeignKey('screenshots.screenshot_id'))
+    text = db.Column(db.Text)
+    confidence = db.Column(db.Float)
     
     def __init__(self, screenshot_id, text, confidence):
         self.screenshot_id = screenshot_id

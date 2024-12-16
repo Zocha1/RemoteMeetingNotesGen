@@ -5,17 +5,23 @@ def client(app):
     """Fixture to create a test client."""
     return app.test_client()
 
-def test_plan_recording_success(client):
-    """Test successful recording planning."""
-    response = client.post('/plan-recording', json={"email": "test@example.com", "date": "2024-01-01"})
-    assert response.status_code == 200
-    assert response.get_json()['message'] == 'Recording scheduled successfully!'
+def test_add_meeting_success(client):
+    """Test successful meeting addition."""
+    response = client.post('/add-meeting', json={
+        "title": "Test Meeting",
+        "scheduled_time": "2024-07-29T14:30:00",
+        "platform": "Zoom"
+    })
+    assert response.status_code == 201
 
-def test_plan_recording_error(client):
-    """Test error when email or date is missing."""
-    response = client.post('/plan-recording', json={"email": ""})
+def test_add_meeting_missing_data(client):
+    """Test error when required meeting data is missing."""
+    response = client.post('/add-meeting', json={
+       "scheduled_time": "2024-07-29T14:30:00",
+        "platform": "Zoom"
+    })
     assert response.status_code == 400
-    assert response.get_json()['error'] == 'Email and date are required'
+    assert response.get_json()['error'] == 'Title, scheduled_time, and platform are required'
 
 def test_routes_rendering(client):
     """Test rendering of HTML pages."""
