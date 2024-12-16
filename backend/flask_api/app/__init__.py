@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from database.db import engine, init_db
+
 import os
 
 db = SQLAlchemy()
@@ -15,7 +17,11 @@ def create_app():
         os.makedirs(UPLOAD_FOLDER)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     
-    # db.init_app(app)
+    app.config['DB_ENGINE'] = engine
+
+    if not os.path.exists('mydb.db'):
+        init_db()
+        print("Database initialized!")
 
     # Register blueprints
     from .routes import main_routes
