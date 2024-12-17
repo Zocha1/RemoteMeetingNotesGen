@@ -101,6 +101,47 @@ def add_meeting():
         db.session.rollback() # rollback if error
         return jsonify({'error': f'Error while creating meeting: {str(e)}'}), 500 # 500 Internal Server Error
     
+@main_routes.route('/get-meetings', methods=['GET'])
+def get_meetings():
+    """Retrieve all meetings from the database along with participants."""
+    try:
+        meetings = Meetings.query.all()
+        meetings_data = []
+
+        for meeting in meetings:
+            # Retrieve participants assigned to the given meeting
+            participants = Participants.query.filter_by(meeting_id=meeting.meeting_id).all()
+            participant_list = []
+
+            for participant in participants:
+                user = Users.query.get(participant.user_id)
+                participant_list.append({
+                    "user_id": user.user_id,
+                    "firstname": user.firstname,
+                    "lastname": user.lastname,
+                    "email": user.email,
+                    "role": participant.role
+                })
+
+            meetings_data.append({
+                "meeting_id": meeting.meeting_id,
+                "title": meeting.title,
+                "scheduled_time": meeting.scheduled_time.isoformat(),
+                "platform": meeting.platform,
+                "participants": participant_list
+            })
+
+        return jsonify({
+            "message": "Meetings retrieved successfully",
+            "meetings": meetings_data
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Error retrieving meetings: {str(e)}"}), 500
+
+
+
+
 
 @main_routes.route('/')
 def index():

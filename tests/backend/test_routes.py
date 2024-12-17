@@ -69,6 +69,15 @@ def test_add_meeting_missing_participant_data(client):
     assert response.status_code == 400
     assert response.get_json()['error'] == "Each participant must have firstname, lastname, and email"
 
+def test_get_meetings_success(client):
+    """Test successful retrieval of meetings."""
+    response = client.get('/get-meetings')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert "message" in data
+    assert "meetings" in data
+    assert isinstance(data['meetings'], list)
+
 
 def test_routes_rendering(client):
     """Test rendering of HTML pages."""
