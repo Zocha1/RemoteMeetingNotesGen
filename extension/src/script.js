@@ -68,3 +68,55 @@ function sendScreenshotToBackend(imageUrl) {
   .catch(error => console.error('Error uploading screenshot:', error));
 }
 
+// Timer Variables
+let timerElement = document.getElementById('timer');
+let seconds = 0, minutes = 0, hours = 0;
+let timerInterval = null;
+let isPaused = false;
+
+// Update Timer Display
+function updateTimerDisplay() {
+  timerElement.textContent = 
+    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+// Start Timer
+function startTimer() {
+  if (!timerInterval) {
+    timerInterval = setInterval(() => {
+      if (!isPaused) {
+        seconds++;
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+        }
+        if (minutes === 60) {
+          minutes = 0;
+          hours++;
+        }
+        updateTimerDisplay();
+      }
+    }, 1000);
+  }
+}
+
+// Pause Timer
+function pauseTimer() {
+  isPaused = !isPaused; // Toggle pause state
+}
+
+// Stop Timer
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  seconds = 0;
+  minutes = 0;
+  hours = 0;
+  isPaused = false;
+  updateTimerDisplay();
+}
+
+// Event Listeners
+document.getElementById('start-recording').addEventListener('click', startTimer);
+document.getElementById('pause-recording').addEventListener('click', pauseTimer);
+document.getElementById('stop-recording').addEventListener('click', stopTimer);
