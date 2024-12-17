@@ -68,6 +68,54 @@
         .menu button:hover {
             text-decoration: underline;
         }
+
+        /* Modal style */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 2px solid #000;
+            width: 50%; 
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close-btn {
+            background: #ff2c2c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        .close-btn:hover {
+            background: #c60000;
+        }
+
+        .note-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .note-content {
+            font-size: 1.2em;
+            white-space: pre-wrap; /* aby tekst był łamany zgodnie z entera w tekście */
+        }
     </style>
 </head>
 <body>
@@ -81,17 +129,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <tr data-meeting-id="001">
                 <td>001</td>
                 <td>Project Kickoff</td>
                 <td>2024-06-01</td>
             </tr>
-            <tr>
+            <tr data-meeting-id="002">
                 <td>002</td>
                 <td>Design Review</td>
                 <td>2024-06-05</td>
             </tr>
-            <tr>
+            <tr data-meeting-id="003">
                 <td>003</td>
                 <td>Sprint Retrospective</td>
                 <td>2024-06-10</td>
@@ -107,12 +155,26 @@
         <button onclick="uploadScreenshot()">Upload Screenshot</button>
     </div>
 
+    <!-- Modal wyświetlający treść notatki -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">Close</button>
+            <div class="note-title" id="noteTitle"></div>
+            <div class="note-content" id="noteContent"></div>
+        </div>
+    </div>
+
     <script>
         const table = document.getElementById('meetingTable');
         const contextMenu = document.getElementById('contextMenu');
+        const noteModal = document.getElementById('noteModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const noteTitleEl = document.getElementById('noteTitle');
+        const noteContentEl = document.getElementById('noteContent');
+
         let selectedRow = null;
 
-        // Show menu on right-click
+        // Right-click menu
         table.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             const row = e.target.closest('tr');
@@ -124,10 +186,62 @@
             }
         });
 
-        // Hide menu on click elsewhere
         document.addEventListener('click', () => {
             contextMenu.style.display = 'none';
         });
+
+        // Double-click event to show full note
+        table.addEventListener('dblclick', (e) => {
+            const row = e.target.closest('tr');
+            if (row && row.dataset.meetingId) {
+                const meetingID = row.dataset.meetingId;
+                showFullNote(meetingID);
+            }
+        });
+
+        function showFullNote(meetingID) {
+            // Poniższa funkcja symuluje pobranie danych z bazy. W realnej aplikacji
+            // należy zastąpić ją wywołaniem AJAX/Fetch do serwera.
+            const noteData = getNoteContentFromDB(meetingID);
+
+            noteTitleEl.textContent = noteData.title;
+            noteContentEl.textContent = noteData.content;
+
+            noteModal.style.display = 'block';
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            noteModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target == noteModal) {
+                noteModal.style.display = 'none';
+            }
+        });
+
+        // Simulacja pobrania danych z bazy
+        function getNoteContentFromDB(meetingID) {
+            // W realnej sytuacji pobieramy dane np. za pomocą fetch():
+            // return fetch(`/api/notes/${meetingID}`).then(r => r.json());
+
+            const dummyNotes = {
+                '001': {
+                    title: 'Project Kickoff',
+                    content: 'Tutaj znajduje się pełna treść notatki ze spotkania o ID 001.\nMożesz zamieścić tutaj dowolne, długie notatki.\nTrzecia linia notatki...'
+                },
+                '002': {
+                    title: 'Design Review',
+                    content: 'Pełna treść notatki ze spotkania ID 002.\nOmówiono prototypy UI/UX...\nUstalono zmiany w dizajnie...'
+                },
+                '003': {
+                    title: 'Sprint Retrospective',
+                    content: 'Cała treść retrospektywy sprintu (ID:003).\nWnioski, co poszło dobrze, co można poprawić...\nDyskusje o przyszłych planach...'
+                }
+            };
+
+            return dummyNotes[meetingID] || {title: 'Unknown', content: 'Brak danych dla tego spotkania.'};
+        }
 
         // Functions for menu actions
         function exportNote() {
@@ -143,10 +257,9 @@
         }
 
         function uploadScreenshot() {
-            alert(`Uploading screenshot for meeting: ${getRowDetails()}`);
+            window.location.href = '/upload-screenshot';
         }
 
-        // Helper to get row details
         function getRowDetails() {
             const cells = selectedRow.getElementsByTagName('td');
             return `ID: ${cells[0].textContent}, Title: ${cells[1].textContent}, Date: ${cells[2].textContent}`;
