@@ -51,16 +51,14 @@ class Participants(db.Model):
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.meeting_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     role = db.Column(db.String(50))
-    joined_at = db.Column(db.DateTime)
     
-    def __init__(self, meeting_id, user_id, role, joined_at):
+    def __init__(self, meeting_id, user_id, role):
         self.meeting_id = meeting_id
         self.user_id = user_id
         self.role = role
-        self. joined_at = joined_at
     
     def __repr__(self):
-        return f"({self.participant_id}), Meeting ID: {self.meeting_id}, User ID: {self.user_id}, Role: {self.role}, Joined at: {self.joined_at}"
+        return f"({self.participant_id}), Meeting ID: {self.meeting_id}, User ID: {self.user_id}, Role: {self.role}"
     
     
 class Transcriptions(db.Model):
