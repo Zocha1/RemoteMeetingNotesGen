@@ -1,10 +1,134 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recording Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff67b2, #ffda57);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
-{% block content %}
-    <h2>Manage Recordings</h2>
-    <div class="btn-group" role="group">
-        <button id="start-recording" class="btn btn-success">Start Recording</button>
-        <button id="stop-recording" class="btn btn-danger">Stop Recording</button>
-        <button id="take-screenshot" class="btn btn-secondary">Take Screenshot</button>
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 50px;
+        }
+
+        .button {
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            border: 4px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .button img {
+            width: 40%;
+            height: 40%;
+            filter: invert(0%); /* Ensures icons remain black */
+        }
+    </style>
+</head>
+<body>
+    <h1>Recording</h1>
+
+    <div id="timer">00:00:00</div>
+
+    <div class="button-container">
+        <button id="startBtn" class="button">
+            <img src="https://img.icons8.com/ios-filled/100/play--v1.png" alt="Start">
+        </button>
+        <button id="pauseBtn" class="button">
+            <img src="https://img.icons8.com/ios-filled/100/pause--v1.png" alt="Pause">
+        </button>
+        <button id="stopBtn" class="button">
+            <img src="https://img.icons8.com/ios-filled/100/stop--v1.png" alt="Stop">
+        </button>
     </div>
-{% endblock %}
+
+    <script>
+        let timerElement = document.getElementById('timer');
+        let startBtn = document.getElementById('startBtn');
+        let pauseBtn = document.getElementById('pauseBtn');
+        let stopBtn = document.getElementById('stopBtn');
+
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+        let timerInterval;
+        let isPaused = false;
+
+        function updateTimerDisplay() {
+            timerElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    if (seconds === 60) {
+                        seconds = 0;
+                        minutes++;
+                    }
+                    if (minutes === 60){
+                        minutes = 0;
+                        hours++;
+                    }
+                    updateTimerDisplay();
+                }, 1000);
+            } else if (isPaused) {
+                isPaused = false; // Resume timer
+            }
+        }
+
+        function pauseTimer() {
+            isPaused = true; // Pause timer
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            isPaused = false;
+            updateTimerDisplay();
+        }
+
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        stopBtn.addEventListener('click', stopTimer);
+    </script>
+</body>
+</html>
