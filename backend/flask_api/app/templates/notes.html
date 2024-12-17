@@ -1,6 +1,156 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Notes</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff67b2, #ffda57);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            padding-top: 20px;
+        }
 
-{% block content %}
-    <h2>Manage Notes</h2>
-    <!-- Add your notes management interface here -->
-{% endblock %}
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 2px solid black;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        .menu {
+            position: absolute;
+            display: none;
+            background-color: #ff2c2c;
+            color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .menu button {
+            display: block;
+            background: transparent;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1em;
+        }
+
+        .menu button:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Notes</h1>
+    <table id="meetingTable">
+        <thead>
+            <tr>
+                <th>Meeting ID</th>
+                <th>Title</th>
+                <th>Date of the Meeting</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>001</td>
+                <td>Project Kickoff</td>
+                <td>2024-06-01</td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>Design Review</td>
+                <td>2024-06-05</td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>Sprint Retrospective</td>
+                <td>2024-06-10</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Menu -->
+    <div class="menu" id="contextMenu">
+        <button onclick="exportNote()">Export Note</button>
+        <button onclick="summarizeNote()">Summarize Note</button>
+        <button onclick="findInNote()">Find in the Note</button>
+        <button onclick="uploadScreenshot()">Upload Screenshot</button>
+    </div>
+
+    <script>
+        const table = document.getElementById('meetingTable');
+        const contextMenu = document.getElementById('contextMenu');
+        let selectedRow = null;
+
+        // Show menu on right-click
+        table.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const row = e.target.closest('tr');
+            if (row && row.rowIndex > 0) { // Exclude the header row
+                selectedRow = row;
+                contextMenu.style.top = `${e.pageY}px`;
+                contextMenu.style.left = `${e.pageX}px`;
+                contextMenu.style.display = 'block';
+            }
+        });
+
+        // Hide menu on click elsewhere
+        document.addEventListener('click', () => {
+            contextMenu.style.display = 'none';
+        });
+
+        // Functions for menu actions
+        function exportNote() {
+            alert(`Exporting note for meeting: ${getRowDetails()}`);
+        }
+
+        function summarizeNote() {
+            alert(`Summarizing note for meeting: ${getRowDetails()}`);
+        }
+
+        function findInNote() {
+            alert(`Finding text in note for meeting: ${getRowDetails()}`);
+        }
+
+        function uploadScreenshot() {
+            alert(`Uploading screenshot for meeting: ${getRowDetails()}`);
+        }
+
+        // Helper to get row details
+        function getRowDetails() {
+            const cells = selectedRow.getElementsByTagName('td');
+            return `ID: ${cells[0].textContent}, Title: ${cells[1].textContent}, Date: ${cells[2].textContent}`;
+        }
+    </script>
+</body>
+</html>
