@@ -8,7 +8,8 @@
     "desktopCapture",
     "windows",
     "tabCapture",
-    "tabs"
+    "tabs",
+    "offscreen"
   ],
   "background": {
     "service_worker": "/src/background.js"
