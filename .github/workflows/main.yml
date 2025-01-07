@@ -25,6 +25,10 @@ jobs:
         ls -la
         echo "Listing backend directory contents:"
         ls -la backend
+
+
+    - name: Install system dependencies for Pillow
+      run: sudo apt-get update && sudo apt-get install -y libjpeg-dev zlib1g-dev
     
     - name: Install Tesseract
       run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
