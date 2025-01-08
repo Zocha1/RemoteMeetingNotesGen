@@ -58,9 +58,17 @@
         <a href="{{ url_for('main.notes') }}"> 
             <button class="button">Notes</button>
         </a>
-        <a>
+        <a href="{{ url_for('main.plan_meeting') }}">
             <button class="button">Plan meeting</button>
         </a>
     </div>
+
+    <script>
+        function generateMeetingID() {
+            const meetingID = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
+            document.getElementById('meeting-id').value = meetingID;
+        }
+    </script>
+
 </body>
 </html>

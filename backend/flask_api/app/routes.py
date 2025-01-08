@@ -195,3 +195,7 @@ def recording():
 @main_routes.route('/notes')
 def notes():
     return render_template('notes.html')
+
+@main_routes.route('/plan-meeting')
+def plan_meeting():
+    return render_template('calendar.html')

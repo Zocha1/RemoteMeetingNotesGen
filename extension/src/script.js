@@ -7,7 +7,7 @@ document.getElementById('take-screenshot').addEventListener('click', takeScreens
 document.getElementById('pause-recording').addEventListener('click', pauseTimer);
 
 document.getElementById('plan-recording').addEventListener('click', function () {
-  chrome.tabs.create({ url: 'http://localhost:5000/recording' });
+  chrome.tabs.create({ url: 'http://localhost:5000/plan-meeting' });
 });
 
 document.getElementById('manage-notes').addEventListener('click', function () {
