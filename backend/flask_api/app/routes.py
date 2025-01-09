@@ -12,12 +12,15 @@ main_routes = Blueprint('main', __name__)
 
 @main_routes.route('/upload-audio', methods=['POST'])
 def upload_audio():
-    if 'audio' not in request.files:
+    if 'file' not in request.files:
         return jsonify({'error': 'No audio file provided'}), 400
 
-    audio_file = request.files['audio']
+    audio_file = request.files['file']
     upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], audio_file.filename)
-    audio_file.save(upload_path)
+    try:
+        audio_file.save(upload_path)
+    except Exception as e:
+        return jsonify({'error': f'Failed to save file: {str(e)}'}), 500
 
     return jsonify({'message': 'Audio file saved successfully', 'file_path': upload_path})
 

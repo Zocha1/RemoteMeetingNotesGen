@@ -60,11 +60,35 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 
 // Obsługa wiadomości zwrotnej z dokumentu offscreen
-chrome.runtime.onMessage.addListener((message, sender) => {
-  if (message.type === "recording-finished") {
-    console.log("Recording finished. Blob URL:", message.blobUrl);
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'recording-finished') {
+    console.log('Received recording-finished message:', message.blobUrl);
 
-    // Otwórz nagranie w nowej karcie
-    chrome.tabs.create({ url: message.blobUrl });
+    // Pobierz Blob na podstawie Blob URL
+    fetch(message.blobUrl)
+      .then((response) => response.blob()) // Konwertuj odpowiedź na Blob
+      .then((blob) => {
+        const formData = new FormData();
+        formData.append('file', blob, 'recording.webm');
+
+        // Wyślij plik na backend
+        fetch('http://localhost:5000/upload-audio', {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log('Recording successfully uploaded to backend.');
+            } else {
+              console.error('Failed to upload recording. Status:', response.status);
+            }
+          })
+          .catch((error) => {
+            console.error('Error uploading recording to backend:', error);
+          });
+      })
+      .catch((error) => {
+        console.error('Error fetching blob from Blob URL:', error);
+      });
   }
 });
