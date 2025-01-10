@@ -4,7 +4,8 @@ import os
 
 def create_app():
     app = Flask(__name__)
-
+    app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     # Configure upload folder
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
     resources_dir = os.path.join(base_dir, 'resources')

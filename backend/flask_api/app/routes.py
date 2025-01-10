@@ -202,3 +202,107 @@ def notes():
 @main_routes.route('/plan-meeting')
 def plan_meeting():
     return render_template('calendar.html')
+
+credentials_path = "instance/client_secret.json"
+#SYNCHRONIZACJA Z GOOGLE CALENDAR
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+from flask import session, redirect, request, url_for
+
+@main_routes.route('/authorize-google', methods=['GET'])
+def authorize_google():
+    current_path = os.getcwd()
+    print(f"My current path is: {current_path}")
+    flow = Flow.from_client_secrets_file(
+        credentials_path,
+        scopes=['https://www.googleapis.com/auth/calendar'],
+        redirect_uri="http://localhost:5000/oauth2callback"
+    )
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
+    session['state'] = state
+    return redirect(authorization_url)
+
+
+
+from google.oauth2.credentials import Credentials
+
+@main_routes.route('/oauth2callback', methods=['GET'])
+def oauth2callback():
+    # Debugowanie sesji
+    print("Sesja przed zapisaniem tokena:", session)
+    current_path = os.getcwd()
+    print(f"My current path is: {current_path}")
+
+    state = session['state']
+    if not os.path.exists(credentials_path):
+        print(f"Błąd: Plik {credentials_path} nie istnieje!")
+    else:
+        print(f"Plik {credentials_path} został poprawnie znaleziony.")
+
+    flow = Flow.from_client_secrets_file(
+        credentials_path,
+        scopes=['https://www.googleapis.com/auth/calendar'],
+        state=state,
+        redirect_uri="http://localhost:5000/oauth2callback"
+    )
+    flow.fetch_token(authorization_response=request.url)
+
+    credentials = flow.credentials
+    session['credentials'] = {
+        'token': credentials.token,
+        'refresh_token': credentials.refresh_token,
+        'token_uri': credentials.token_uri,
+        'client_id': credentials.client_id,
+        'client_secret': credentials.client_secret,
+        'scopes': credentials.scopes
+    }
+    
+    # Debugowanie tokenów
+    print("Sesja po zapisaniu tokena:", session)
+    return jsonify({'message': 'Google Calendar connected successfully'})
+
+
+
+@main_routes.route('/sync-google-calendar', methods=['POST'])
+def sync_google_calendar():
+    # Check if credentials exist in session
+    if 'credentials' not in session:
+        return jsonify({'error': 'Google Calendar not authorized'}), 401
+
+    credentials = Credentials(**session['credentials'])
+    service = build('calendar', 'v3', credentials=credentials)
+
+    # Get meeting details from request
+    data = request.get_json()
+    start_time = data.get('start_time')
+    end_time = data.get('end_time')
+    title = data.get('title')
+
+    # Ensure times are valid
+    if not start_time or not end_time:
+        return jsonify({'error': 'Start time and end time are required'}), 400
+
+    if start_time >= end_time:
+        return jsonify({'error': 'End time must be after start time'}), 400
+
+    event = {
+        'summary': title or "No Title",
+        'start': {
+            'dateTime': start_time,
+            'timeZone': 'UTC',
+        },
+        'end': {
+            'dateTime': end_time,
+            'timeZone': 'UTC',
+        },
+        'attendees': [{'email': email} for email in data.get('attendees', [])]
+    }
+
+    try:
+        created_event = service.events().insert(calendarId='primary', body=event).execute()
+        return jsonify({'message': 'Event created successfully', 'event_id': created_event['id']}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
