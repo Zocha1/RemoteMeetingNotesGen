@@ -6,6 +6,9 @@ from .models import *
 from PIL import Image
 import pytesseract
 from pytesseract import Output
+import requests
+
+
 
 # Define Blueprint
 main_routes = Blueprint('main', __name__)
@@ -203,16 +206,17 @@ def notes():
 def plan_meeting():
     return render_template('calendar.html')
 
-credentials_path = "instance/client_secret.json"
 #SYNCHRONIZACJA Z GOOGLE CALENDAR
+
+credentials_path = "instance/client_secret.json"
+
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from flask import session, redirect, request, url_for
 
 @main_routes.route('/authorize-google', methods=['GET'])
 def authorize_google():
-    current_path = os.getcwd()
-    print(f"My current path is: {current_path}")
+
     flow = Flow.from_client_secrets_file(
         credentials_path,
         scopes=['https://www.googleapis.com/auth/calendar'],
@@ -231,10 +235,6 @@ from google.oauth2.credentials import Credentials
 
 @main_routes.route('/oauth2callback', methods=['GET'])
 def oauth2callback():
-    # Debugowanie sesji
-    print("Sesja przed zapisaniem tokena:", session)
-    current_path = os.getcwd()
-    print(f"My current path is: {current_path}")
 
     state = session['state']
     if not os.path.exists(credentials_path):
@@ -306,3 +306,141 @@ def sync_google_calendar():
         return jsonify({'message': 'Event created successfully', 'event_id': created_event['id']}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+#ZOOM
+
+@main_routes.route('/zoom/authorize', methods=['GET'])
+def zoom_authorize():
+    client_id = os.getenv('ZOOM_CLIENT_ID')
+    redirect_uri = "http://localhost:5000/zoom/oauth2callback"
+    authorization_url = f"https://zoom.us/oauth/authorize?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}"
+    return redirect(authorization_url)
+
+
+import base64
+
+@main_routes.route('/zoom/oauth2callback', methods=['GET'])
+def zoom_callback():
+    code = request.args.get('code')
+    if not code:
+        return jsonify({'error': 'Authorization code not found'}), 400
+
+    # Exchange code for access token
+    token_url = "https://zoom.us/oauth/token"
+    client_id = os.getenv('ZOOM_CLIENT_ID')
+    client_secret = os.getenv('ZOOM_CLIENT_SECRET')
+    redirect_uri = "http://localhost:5000/zoom/oauth2callback"
+
+    # Properly encode client_id and client_secret
+    credentials = f"{client_id}:{client_secret}"
+    encoded_credentials = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
+    headers = {
+        'Authorization': f'Basic {encoded_credentials}',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    data = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': redirect_uri,
+    }
+
+    response = requests.post(token_url, headers=headers, data=data)
+    if response.status_code == 200:
+        tokens = response.json()
+        session['zoom_access_token'] = tokens['access_token']
+        return jsonify({'message': 'Zoom authorized successfully', 'tokens': tokens})
+    else:
+        return jsonify({'error': response.json()}), response.status_code
+
+
+@main_routes.route('/zoom/create-meeting', methods=['POST'])
+def create_zoom_meeting():
+    if 'zoom_access_token' not in session:
+        return jsonify({'error': 'User not authorized with Zoom'}), 401
+
+    access_token = session['zoom_access_token']
+    headers = {'Authorization': f'Bearer {access_token}'}
+    meeting_data = {
+        "topic": "Test Meeting",
+        "type": 2,
+        "start_time": "2025-01-10T15:00:00Z",
+        "duration": 30,
+        "timezone": "UTC"
+    }
+  
+    response = requests.post("https://api.zoom.us/v2/users/me/meetings", headers=headers, json=meeting_data)
+    if response.status_code == 201:
+        return jsonify(response.json())
+    else:
+        return jsonify({'error': response.json()}), response.status_code
+       
+    
+
+@main_routes.route('/zoom/sync-meeting', methods=['POST'])
+def zoom_sync_meeting():
+    
+    if 'zoom_access_token' not in session:
+        return jsonify({'error': 'User not authorized with Zoom'}), 401
+    # Retrieve meeting details from request
+    data = request.get_json()
+    title = data.get('title', 'New Meeting')
+    start_time = data.get('start_time')  # Example: '2025-01-10T15:00:00Z'
+    end_time = data.get('end_time')  # Example: '2025-01-10T15:30:00Z'
+    duration = data.get('duration', 30)  # Optional: Duration in minutes
+
+    if not start_time or not end_time:
+        return jsonify({'error': 'Start time and end time are required'}), 400
+
+    # Calculate meeting duration if not provided
+    if not duration:
+        start_dt = datetime.fromisoformat(start_time)
+        end_dt = datetime.fromisoformat(end_time)
+        duration = int((end_dt - start_dt).total_seconds() / 60)
+
+    access_token = session['zoom_access_token']
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+
+    meeting_data = {
+        "topic": title,
+        "type": 2,  # Scheduled meeting
+        "start_time": start_time,
+        "duration": duration,
+        "timezone": "UTC",
+        "settings": {
+            "join_before_host": True,
+            "mute_upon_entry": True,
+            "waiting_room": True,
+        }
+    }
+
+    # Create meeting via Zoom API
+    print("Headers:", headers)
+    print("Meeting Data:", meeting_data)
+
+    response = requests.post("https://api.zoom.us/v2/users/me/meetings", headers=headers, json=meeting_data)
+    print("Zoom Response Status Code:", response.status_code)
+    print("Zoom Response Content:", response.json())
+
+
+    if response.status_code == 201:
+        zoom_meeting = response.json()
+        # Save Zoom meeting details to the database
+        new_meeting = Meetings(
+            title=zoom_meeting['topic'],
+            scheduled_time=datetime.fromisoformat(start_time),
+            platform="Zoom"
+        )
+        db.session.add(new_meeting)
+        db.session.commit()
+
+        return jsonify({
+            'message': 'Meeting synchronized with Zoom successfully',
+            'zoom_meeting': zoom_meeting,
+            'local_meeting_id': new_meeting.meeting_id
+        }), 201
+    else:
+        return jsonify({'error': response.json()}), response.status_code

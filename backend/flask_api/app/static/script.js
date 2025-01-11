@@ -53,3 +53,28 @@ async function syncMeeting() {
         console.error("Error syncing meeting:", err);
     }
 }
+
+
+async function authorizeZoom() {
+    window.open('/zoom/authorize', '_blank');
+}
+
+async function syncZoomMeeting() {
+    const meetingData = {
+        title: document.getElementById('meeting-title').value,
+        start_time: document.getElementById('meeting-date').value + 'T' + document.getElementById('start-time').value + ':00Z',
+        end_time: document.getElementById('meeting-date').value + 'T' + document.getElementById('end-time').value + ':00Z',
+    };
+    const response = await fetch('/zoom/sync-meeting', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(meetingData)
+    });
+    const data = await response.json();
+    if (response.ok) {
+        alert('Meeting synchronized with Zoom successfully!');
+        console.log(data);
+    } else {
+        alert(`Error: ${data.error}`);
+    }
+}
