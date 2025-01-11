@@ -19,7 +19,26 @@ def upload_audio():
         return jsonify({'error': 'No audio file provided'}), 400
 
     audio_file = request.files['file']
-    upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], audio_file.filename)
+
+    try:
+        last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+        if last_meeting:
+            meeting_id = str(last_meeting.meeting_id)
+        else:
+           return jsonify({'error': 'No meeting found in database'}), 404
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch last meeting ID: {str(e)}'}), 500
+
+    audio_upload_folder = current_app.config['AUDIO_UPLOAD_FOLDER']
+    meeting_folder = os.path.join(audio_upload_folder, meeting_id)
+    os.makedirs(meeting_folder, exist_ok=True) 
+
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    file_name = f"audio_{timestamp}{os.path.splitext(audio_file.filename)[1]}"
+    upload_path = os.path.join(meeting_folder, file_name)
+
+    # upload_path = os.path.join(meeting_folder, audio_file.filename)
+    
     try:
         audio_file.save(upload_path)
     except Exception as e:
@@ -137,10 +156,21 @@ def upload_screenshot():
         image_data = data['image'].split(",")[1]
         image_data = base64.b64decode(image_data)
 
-    # Generowanie nazwy pliku
-        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], f'screenshot_{timestamp}.png')
+        try:
+            last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+            if last_meeting:
+                meeting_id = str(last_meeting.meeting_id)
+            else:
+                return jsonify({'error': 'No meeting found in database'}), 404
+        except Exception as e:
+             return jsonify({'error': f'Failed to fetch last meeting ID: {str(e)}'}), 500
 
+        screenshot_upload_folder = current_app.config['SCREENSHOT_UPLOAD_FOLDER']
+        meeting_folder = os.path.join(screenshot_upload_folder, meeting_id)
+        os.makedirs(meeting_folder, exist_ok=True)
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        file_path = os.path.join(meeting_folder, f'screenshot_{timestamp}.png')
+        
         # Zapisywanie na dysku
         with open(file_path, 'wb') as f:
             f.write(image_data)

@@ -9,14 +9,17 @@ def create_app():
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     # Configure upload folder
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-    resources_dir = os.path.join(base_dir, 'resources')
-    UPLOAD_FOLDER = os.path.join(resources_dir, 'screenshots')      
+    resources_dir = os.path.join(base_dir, 'resources')    
 
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
-
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    SCREENSHOT_UPLOAD_FOLDER = os.path.join(resources_dir, 'screenshots')
+    if not os.path.exists(SCREENSHOT_UPLOAD_FOLDER):
+        os.makedirs(SCREENSHOT_UPLOAD_FOLDER)
+    app.config['SCREENSHOT_UPLOAD_FOLDER'] = SCREENSHOT_UPLOAD_FOLDER
     
+    AUDIO_UPLOAD_FOLDER = os.path.join(resources_dir, 'audio')
+    if not os.path.exists(AUDIO_UPLOAD_FOLDER):
+        os.makedirs(AUDIO_UPLOAD_FOLDER)
+    app.config['AUDIO_UPLOAD_FOLDER'] = AUDIO_UPLOAD_FOLDER
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
