@@ -1,76 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+
+{% block head_styles %}
     <title>Manage Notes</title>
-     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #ff67b2, #ffda57);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            padding-top: 20px;
-        }
+    <link rel="stylesheet" href="{{ url_for('static', filename='notes.css') }}">
+{% endblock %}
+    
+<{% block content %}
 
-        h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 60%;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        table, th, td {
-            border: 2px solid black;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.8);
-        }
-
-        th {
-            font-weight: bold;
-        }
-         .menu {
-            position: absolute;
-            display: none;
-            background-color: #ff2c2c;
-            color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            z-index: 1000;
-        }
-
-        .menu button {
-            display: block;
-            background: transparent;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            margin: 5px 0;
-            cursor: pointer;
-            text-align: left;
-            font-size: 1em;
-        }
-
-        .menu button:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
     <h1>Manage Notes</h1>
     <table id="meetingTable">
         <thead>
@@ -163,5 +99,4 @@
 
          fetchMeetingData();
     </script>
-</body>
-</html>
+{% endblock %}

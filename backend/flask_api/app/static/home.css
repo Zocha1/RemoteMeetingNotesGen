@@ -1,0 +1,68 @@
+/* static/home.css */
+
+/* Styles for the main container */
+.home-container {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Styles for the welcome header */
+.home-container h2 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+     color: #ff2c2c;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Dodany cień tekstu */
+}
+
+/* Styles for the description paragraph */
+.home-container p {
+    text-align: justify;
+    margin: 20px 15%;
+    line-height: 1.5;
+}
+
+
+/* Styles for the image */
+.home-image {
+    width: 50%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    height: auto;
+      display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Styles for the container of key features */
+.features-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 10%;
+}
+
+/* Styles for each key feature tile */
+.feature-tile {
+    background-color: #fde4cf; /* Zmiana: delikatny, pastelowy kolor tła*/
+    border-radius: 10px;
+    padding: 20px;
+    width: 25%;
+    min-width: 200px; /* Minimum width of each tile */
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Zmiana: Zwiększony i wzmocniony cień */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Dodana animacja hover*/
+}
+
+.feature-tile:hover { /* Dodana animacja hover*/
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 18px rgba(0, 0, 0, 0.3);
+}
+
+.feature-tile p {
+    margin:0;
+    text-align: center;
+        font-weight: bold; /* Ustawienie tekstu na pogrubiony*/
+        color: #333; /* Dodanie koloru tekstu*/
+}

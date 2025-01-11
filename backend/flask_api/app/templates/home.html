@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head_styles %}
+    <title>Remote Meeting Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="home-container">
+        <h1>Welcome to Remote Meeting Notes Generator</h1>
+        <img src="{{ url_for('static', filename='home_logo.png') }}" alt="Meeting Illustration" class="home-image">
+        
+        <!-- <h3>Key features</h3> -->
+          <div class="features-container">
+               <div class="feature-tile">
+                    <p> Upload audio files to get a transcript and summary.</p>
+               </div>
+                 <div class="feature-tile">
+                    <p>View your created notes, and see their summaries.</p>
+                </div>
+               <div class="feature-tile">
+                     <p> Plan your next meeting.</p>
+               </div>
+                 <div class="feature-tile">
+                    <p> Capture screenshots during meetings.</p>
+                </div>
+                 <div class="feature-tile">
+                     <p>Integrated with a Chrome extension for seamless use. </p>
+                 </div>
+                 <div class="feature-tile">
+                    <p>Start using the application by clicking one of the buttons in navbar on top of the page.</p>
+                </div>
+          </div>
+    </div>
+{% endblock %}

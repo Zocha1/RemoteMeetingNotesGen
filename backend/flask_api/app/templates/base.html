@@ -3,72 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block head_styles %}
     <title>Remote Meeting Notes</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #ff67b2, #ffda57);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+    {% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
 
-        h1 {
-            font-size: 3em;
-            margin-top: 0.5em;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin-top: 2em;
-        }
-
-        .button {
-            background-color: #ff2c2c;
-            color: black;
-            font-size: 1.5em;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .button:hover {
-            transform: scale(1.1);
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-        }
-    </style>
 </head>
 <body>
-    <!-- Nagłówek strony -->
-    <h1>Remote Meeting Notes</h1>
-    
-    <!-- Przyciski -->
-    <div class="button-container">
-        <a href="{{ url_for('main.recording') }}">
-            <button class="button">Recording</button>
-        </a>
-        <a href="{{ url_for('main.notes') }}"> 
-            <button class="button">Notes</button>
-        </a>
-        <a href="{{ url_for('main.plan_meeting') }}">
-            <button class="button">Plan meeting</button>
-        </a>
-    </div>
+    <!-- Nawigacyjny pasek -->
+        <nav class="navbar">
+            <a href="{{ url_for('main.home') }}">
+                <button class="button">Home</button>
+            </a>
+            <a href="{{ url_for('main.notes') }}"> 
+                <button class="button">Notes</button>
+            </a>
+            <a href="{{ url_for('main.plan_meeting') }}">
+                <button class="button">Plan meeting</button>
+            </a>
+      </nav>
 
-    <script>
-        function generateMeetingID() {
-            const meetingID = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
-            document.getElementById('meeting-id').value = meetingID;
-        }
-    </script>
+
+    <!-- Main -->
+     <main>
+    {% block content %}{% endblock %}
+    </main>
+    <footer>
+      <p>© 2024 RemoteMeetingNotesGen</p>
+    </footer>
 
 </body>
 </html>

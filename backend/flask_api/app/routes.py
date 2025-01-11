@@ -289,6 +289,10 @@ def upload_screenshot():
 def index():
     return render_template('base.html')
 
+@main_routes.route('/home')
+def home():
+    return render_template('home.html')
+
 @main_routes.route('/recording')
 def recording():
     return render_template('recording.html')
