@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Details</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff67b2, #ffda57);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            padding-top: 20px;
+        }
+
+         h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 70%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .meeting-info, .transcription-summary {
+            margin-bottom: 20px;
+        }
+        h2{
+           font-size: 2em;
+        }
+
+        p {
+            margin-bottom: 10px;
+            text-align: justify;
+            line-height: 1.5;
+        }
+         a {
+            text-decoration: none;
+            color: white;
+            background-color: #ff2c2c;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        a:hover {
+             background-color: #b31b1b;
+         }
+
+    </style>
+</head>
+<body>
+    <h1>Meeting Details</h1>
+    <div class="container">
+      <div class="meeting-info">
+        <h2> Meeting Information </h2>
+        <p><strong>Meeting ID:</strong> {{ meeting.meeting_id }}</p>
+        <p><strong>Title:</strong> {{ meeting.title }}</p>
+        <p><strong>Scheduled time:</strong> {{ meeting.scheduled_time }}</p>
+        <p><strong>Platform:</strong> {{ meeting.platform }}</p>
+        </div>
+        {% if transcription %}
+        <div class="transcription-summary">
+          <h2> Transcription and Summary </h2>
+            <p><strong>Transcription:</strong> {{ transcription.full_text }}</p>
+            <p><strong>Summary:</strong> {{ transcription.summary }}</p>
+        </div>
+        {% else %}
+           <p><strong> No transcription available </strong></p>
+        {% endif %}
+        <a href="/">Go back to notes</a>
+     </div>
+</body>
+</html>

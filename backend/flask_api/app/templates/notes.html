@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Notes</title>
-    <style>
+     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -26,6 +26,7 @@
             border-collapse: collapse;
             width: 60%;
             margin-top: 20px;
+            cursor: pointer;
         }
 
         table, th, td {
@@ -41,8 +42,7 @@
         th {
             font-weight: bold;
         }
-
-        .menu {
+         .menu {
             position: absolute;
             display: none;
             background-color: #ff2c2c;
@@ -81,21 +81,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>001</td>
-                <td>Project Kickoff</td>
-                <td>2024-06-01</td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>Design Review</td>
-                <td>2024-06-05</td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>Sprint Retrospective</td>
-                <td>2024-06-10</td>
-            </tr>
+            <!-- Meeting data will be inserted here -->
         </tbody>
     </table>
 
@@ -104,13 +90,39 @@
         <button onclick="exportNote()">Export Note</button>
         <button onclick="summarizeNote()">Summarize Note</button>
         <button onclick="findInNote()">Find in the Note</button>
-        <button onclick="uploadScreenshot()">Upload Screenshot</button>
+         <button onclick="uploadScreenshot()">Upload Screenshot</button>
     </div>
 
     <script>
-        const table = document.getElementById('meetingTable');
-        const contextMenu = document.getElementById('contextMenu');
-        let selectedRow = null;
+         const table = document.getElementById('meetingTable');
+         const contextMenu = document.getElementById('contextMenu');
+         let selectedRow = null;
+
+         function fetchMeetingData() {
+            fetch('/meeting-data')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#meetingTable tbody');
+                    tableBody.innerHTML = '';
+                    data.forEach(meeting => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${meeting.meeting_id}</td>
+                            <td>${meeting.title}</td>
+                            <td>${meeting.scheduled_time ? new Date(meeting.scheduled_time).toLocaleDateString() : 'N/A'}</td>
+                            
+                        `;
+
+                         row.addEventListener('click', () => {
+                            window.location.href = `/meeting-details/${meeting.meeting_id}`;
+                         });
+
+                        tableBody.appendChild(row);
+                    });
+                })
+             .catch(error => console.error('Error fetching meeting data:', error));
+        }
+
 
         // Show menu on right-click
         table.addEventListener('contextmenu', (e) => {
@@ -123,7 +135,6 @@
                 contextMenu.style.display = 'block';
             }
         });
-
         // Hide menu on click elsewhere
         document.addEventListener('click', () => {
             contextMenu.style.display = 'none';
@@ -141,16 +152,16 @@
         function findInNote() {
             alert(`Finding text in note for meeting: ${getRowDetails()}`);
         }
-
         function uploadScreenshot() {
             alert(`Uploading screenshot for meeting: ${getRowDetails()}`);
         }
-
         // Helper to get row details
-        function getRowDetails() {
-            const cells = selectedRow.getElementsByTagName('td');
-            return `ID: ${cells[0].textContent}, Title: ${cells[1].textContent}, Date: ${cells[2].textContent}`;
-        }
+         function getRowDetails() {
+             const cells = selectedRow.getElementsByTagName('td');
+             return `ID: ${cells[0].textContent}, Title: ${cells[1].textContent}, Date: ${cells[2].textContent}`;
+         }
+
+         fetchMeetingData();
     </script>
 </body>
 </html>

@@ -67,15 +67,17 @@ class Transcriptions(db.Model):
     transcription_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.meeting_id'))
     full_text = db.Column(db.Text)
+    summary = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, meeting_id, full_text, created_at):
+    def __init__(self, meeting_id, full_text, summary, created_at):
         self.meeting_id = meeting_id
         self.full_text = full_text
+        self.summary = summary
         self.created_at = created_at
     
     def __repr__(self):
-        return f"({self.transcription_id}), Meeting ID: {self.meeting_id}, Trnascription: {self.full_text}, Created at: {self.created_at}"
+        return f"({self.transcription_id}), Meeting ID: {self.meeting_id}, Trnascription: {self.full_text}, Summary: {self.summary}, Created at: {self.created_at}"
     
 
 class Screenshots(db.Model):

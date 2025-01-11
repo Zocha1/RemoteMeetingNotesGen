@@ -1,12 +1,14 @@
 from flask import Blueprint, request, jsonify, current_app, render_template
 import base64
 from datetime import datetime
+import time
 import os
 from .models import *
 from PIL import Image
 import pytesseract
 from pytesseract import Output
 import requests
+from .audio_processing import process_audio_to_text
 
 
 
@@ -43,6 +45,13 @@ def upload_audio():
         audio_file.save(upload_path)
     except Exception as e:
         return jsonify({'error': f'Failed to save file: {str(e)}'}), 500
+    
+    try:
+        transcribed_text = process_audio_to_text(upload_path)
+        print(f"Transcribed text: {transcribed_text}")
+    except Exception as e:
+        return jsonify({'error': f'Failed to process audio: {str(e)}'}), 500
+
 
     return jsonify({'message': 'Audio file saved successfully', 'file_path': upload_path})
 
@@ -106,43 +115,99 @@ def add_meeting():
         db.session.rollback() # rollback if error
         return jsonify({'error': f'Error while creating meeting: {str(e)}'}), 500 # 500 Internal Server Error
     
-@main_routes.route('/get-meetings', methods=['GET'])
-def get_meetings():
-    """Retrieve all meetings from the database along with participants."""
+@main_routes.route('/meeting-data', methods=['GET'])
+def get_meeting_data():
+    """
+    Pobiera dane ze spotkań oraz transkrypcji i zwraca je w JSON.
+    """
     try:
+        # Pobierz wszystkie spotkania z bazy danych
         meetings = Meetings.query.all()
-        meetings_data = []
+        # Pobierz transkrypcje z bazy danych
+        transcriptions = Transcriptions.query.all()
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch data: {str(e)}'}), 500
+    
+    meeting_data = []
+    for meeting in meetings:
+        # Filtruj transkrypcje dla konkretnego spotkania
+      filtered_transcriptions = [t for t in transcriptions if t.meeting_id == meeting.meeting_id]
+      
+      # Stwórz słownik danych dla każdego spotkania
+      meeting_entry = {
+          'meeting_id': meeting.meeting_id,
+          'title': meeting.title,
+          'scheduled_time': meeting.scheduled_time.isoformat() if meeting.scheduled_time else None,
+          'platform': meeting.platform,
+          'transcriptions': [
+             {
+                 'transcription_id': t.transcription_id,
+                 'full_text': t.full_text,
+                 'summary': t.summary
+             }
+             for t in filtered_transcriptions]
+      }
+      meeting_data.append(meeting_entry)
+    
+    return jsonify(meeting_data)
 
-        for meeting in meetings:
-            # Retrieve participants assigned to the given meeting
-            participants = Participants.query.filter_by(meeting_id=meeting.meeting_id).all()
-            participant_list = []
+@main_routes.route('/meeting-details/<int:meeting_id>', methods=['GET'])
+def get_meeting_details(meeting_id):
+    """
+    Pobiera dane konkretnego spotkania i jego transkrypcję z bazy danych
+    i renderuje je w szablonie meeting_details.html.
+    """
+    try:
+        # Pobierz spotkanie z bazy danych
+        meeting = Meetings.query.filter_by(meeting_id=meeting_id).first_or_404()
+        # Pobierz transkrypcje do tego spotkania
+        transcription = Transcriptions.query.filter_by(meeting_id=meeting_id).first()
 
-            for participant in participants:
-                user = Users.query.get(participant.user_id)
-                participant_list.append({
-                    "user_id": user.user_id,
-                    "firstname": user.firstname,
-                    "lastname": user.lastname,
-                    "email": user.email,
-                    "role": participant.role
-                })
-
-            meetings_data.append({
-                "meeting_id": meeting.meeting_id,
-                "title": meeting.title,
-                "scheduled_time": meeting.scheduled_time.isoformat(),
-                "platform": meeting.platform,
-                "participants": participant_list
-            })
-
-        return jsonify({
-            "message": "Meetings retrieved successfully",
-            "meetings": meetings_data
-        }), 200
+        if not transcription:
+           return render_template("meeting_details.html", meeting=meeting, transcription=None)
+           
+        return render_template("meeting_details.html", meeting=meeting, transcription=transcription)
 
     except Exception as e:
-        return jsonify({"error": f"Error retrieving meetings: {str(e)}"}), 500
+        return jsonify({'error': f'Failed to fetch meeting data: {str(e)}'}), 500
+
+# @main_routes.route('/get-meetings', methods=['GET'])
+# def get_meetings():
+#     """Retrieve all meetings from the database along with participants."""
+#     try:
+#         meetings = Meetings.query.all()
+#         meetings_data = []
+
+#         for meeting in meetings:
+#             # Retrieve participants assigned to the given meeting
+#             participants = Participants.query.filter_by(meeting_id=meeting.meeting_id).all()
+#             participant_list = []
+
+#             for participant in participants:
+#                 user = Users.query.get(participant.user_id)
+#                 participant_list.append({
+#                     "user_id": user.user_id,
+#                     "firstname": user.firstname,
+#                     "lastname": user.lastname,
+#                     "email": user.email,
+#                     "role": participant.role
+#                 })
+
+#             meetings_data.append({
+#                 "meeting_id": meeting.meeting_id,
+#                 "title": meeting.title,
+#                 "scheduled_time": meeting.scheduled_time.isoformat(),
+#                 "platform": meeting.platform,
+#                 "participants": participant_list
+#             })
+
+#         return jsonify({
+#             "message": "Meetings retrieved successfully",
+#             "meetings": meetings_data
+#         }), 200
+
+#     except Exception as e:
+#         return jsonify({"error": f"Error retrieving meetings: {str(e)}"}), 500
 
 
 @main_routes.route('/upload-screenshot', methods=['POST'])
