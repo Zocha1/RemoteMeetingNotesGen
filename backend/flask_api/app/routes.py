@@ -9,6 +9,7 @@ import pytesseract
 from pytesseract import Output
 import requests
 from .audio_processing import process_audio_to_text
+from .email_service import send_meeting_notes_email
 
 
 
@@ -284,6 +285,27 @@ def upload_screenshot():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
+@main_routes.route('/send-notes-email/<int:meeting_id>', methods=['POST'])
+def send_notes_email_endpoint(meeting_id):
+    """
+      Pobiera transkrypcję i podsumowanie z bazy danych i wysyła je mailem.
+    """
+    try:
+       # Pobierz spotkanie z bazy danych
+        meeting = Meetings.query.filter_by(meeting_id=meeting_id).first_or_404()
+        # Pobierz transkrypcje do tego spotkania
+        transcription = Transcriptions.query.filter_by(meeting_id=meeting_id).first()
+        
+         # Pobierz dane do maila, i wyślij wiadomość
+        if transcription:
+           ##emails = [Users.query.filter_by(user_id = participant.user_id).first().email for participant in participants]
+           emails = ["heniekkombajnista666@gmail.com"]
+           send_meeting_notes_email(emails, meeting.title, transcription.full_text, transcription.summary)
+           return jsonify({'message': 'Email sent successfully'}), 200
+        else:
+            return jsonify({'error': f'No transription found'}), 404
+    except Exception as e:
+       return jsonify({'error': f'Failed to fetch meeting data: {str(e)}'}), 500
 
 @main_routes.route('/')
 def index():

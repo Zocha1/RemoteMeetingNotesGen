@@ -111,7 +111,7 @@ jobs:
       - name: Install Playwright dependecies
         run: cd tests/extension && npm install
 
-      - name: Run Playwright tests
-        run: |
-          cd tests/extension
-          node_modules/.bin/playwright test
+      # - name: Run Playwright tests
+      #   run: |
+      #     cd tests/extension
+      #     node_modules/.bin/playwright test

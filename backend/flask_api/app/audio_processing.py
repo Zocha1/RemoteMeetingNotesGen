@@ -6,6 +6,7 @@ from flask import jsonify
 import whisper
 import cohere
 from .models import db, Transcriptions, Meetings
+from .email_service import send_meeting_notes_email
 
 
 def _convert_to_wav(audio_file_path):
@@ -74,6 +75,13 @@ def process_audio_to_text(audio_file_path):
         db.session.add(new_transcription)
         db.session.commit()
 
+        # # Send email with meeting notes
+        # print("Before sending email") 
+        # emails = ["heniek.kombajnista666@gmail.com", "pawelrus.637@gmail.com"]        
+        # print(last_meeting.title)
+        # send_meeting_notes_email(emails, last_meeting.title, result["text"], summary)
+        # print("Email sent successfully")
+        
         return result["text"]
     except Exception as e:
         return f"Error in audio processing: {str(e)}"

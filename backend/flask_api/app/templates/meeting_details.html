@@ -42,7 +42,22 @@
         {% else %}
            <p><strong> No transcription available </strong></p>
         {% endif %}
-        <a href="/notes">Go back to notes</a>
+        <div class="button-container">
+          <a href="/notes">Go back to notes</a>
+          <a href="#" onclick="sendEmail()" class="send-email-button">Send Emails</a>
+        </div>
      </div>
+     <script>
+      function sendEmail(){
+         fetch('/send-notes-email/{{meeting.meeting_id}}', {method: 'POST'})
+          .then(response =>{
+             if (response.ok) {
+              alert("Email send successfully")
+            }else{
+              alert("Error sending email")
+            }
+          })
+      }
+    </script>
 </body>
 </html>
