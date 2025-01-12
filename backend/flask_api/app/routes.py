@@ -1,8 +1,9 @@
-from flask import Blueprint, request, jsonify, current_app, render_template
+from flask import Blueprint, request, jsonify, current_app, render_template, send_file
 import base64
 from datetime import datetime
 import time
 import os
+from io import StringIO, BytesIO
 from .models import *
 from PIL import Image
 import pytesseract
@@ -305,15 +306,93 @@ def send_notes_email_endpoint(meeting_id):
             for screenshot in screenshots:
                 ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
                 if ocr_result:
-                   ocr_texts.append(f"<p><strong>Screenshot {screenshot.screenshot_id} text:</strong> {ocr_result.text}  </p></br>")
+                   ocr_texts.append(f"<p><strong>Screenshot {screenshot.screenshot_id} text:</strong> {ocr_result.text}  </p>")
             print(f"OCR texts: {ocr_texts}")
-            
+
             send_meeting_notes_email(emails, meeting.title, transcription.full_text, transcription.summary, ocr_texts)
             return jsonify({'message': 'Email sent successfully'}), 200
         else:
             return jsonify({'error': f'No transription found'}), 404
     except Exception as e:
        return jsonify({'error': f'Failed to fetch meeting data: {str(e)}'}), 500
+
+
+          
+@main_routes.route('/download-meeting-data/<string:output_format>/<int:meeting_id>', methods=['GET'])
+def download_meeting_data_md(output_format, meeting_id):
+    """Pobiera dane konkretnego spotkania i jego transkrypcję i zwraca w pliku .md"""
+    try:
+         # Pobierz spotkanie z bazy danych
+        meeting = Meetings.query.filter_by(meeting_id=meeting_id).first_or_404()
+        # Pobierz transkrypcje do tego spotkania
+        transcription = Transcriptions.query.filter_by(meeting_id=meeting_id).first()
+        # Pobierz screenshoty z bazy danych
+        screenshots = Screenshots.query.filter_by(meeting_id=meeting_id).all()
+
+        # Pobierz OCR texty powiązane ze screenami
+        ocr_texts = []
+        for screenshot in screenshots:
+            ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
+            if ocr_result:
+                ocr_texts.append(f"Screenshot text: {ocr_result.text}")
+
+        if output_format == 'md':
+            text_output = f"## Meeting ID: {meeting.meeting_id}\n"
+            text_output += f"## Title: {meeting.title}\n"
+            text_output += f"## Scheduled Time: {meeting.scheduled_time}\n"
+            text_output += f"## Platform: {meeting.platform}\n\n"
+            
+            if transcription:
+                text_output += f"## Transcription:\n{transcription.full_text}\n\n"
+                text_output += f"## Summary:\n{transcription.summary}\n\n"
+                # Add OCR data
+                text_output += f"## OCR Results:\n{os.linesep.join(ocr_texts)}\n"
+            else:
+                text_output += "## No Transcription data available\n"
+            # Generowanie pliku markdown
+            output = StringIO()
+            output.write(text_output)
+            mem = BytesIO()
+            mem.write(output.getvalue().encode('utf-8'))
+            mem.seek(0)
+    
+            return send_file(
+                mem,
+            as_attachment=True,
+                download_name=f"meeting_{meeting_id}_data.md",
+                mimetype='text/markdown'
+            )
+        elif output_format == 'txt':
+            text_output = f"Meeting ID: {meeting.meeting_id}\n"
+            text_output += f"Title: {meeting.title}\n"
+            text_output += f"Scheduled Time: {meeting.scheduled_time}\n"
+            text_output += f"Platform: {meeting.platform}\n\n"
+        
+            if transcription:
+                text_output += f"Transcription:\n{transcription.full_text}\n\n"
+                text_output += f"Summary:\n{transcription.summary}\n\n"
+                # Add OCR data
+                text_output += f"OCR Results:\n{os.linesep.join(ocr_texts)}\n"
+            else:
+                text_output += "No Transcription data available\n"
+
+
+            # Generowanie pliku tekstowego
+            output = StringIO()
+            output.write(text_output)
+            mem = BytesIO()
+            mem.write(output.getvalue().encode('utf-8'))
+            mem.seek(0)
+    
+            return send_file(
+                mem,
+            as_attachment=True,
+                download_name=f"meeting_{meeting_id}_data.txt",
+                mimetype='text/plain'
+            )
+
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch data and generate md file: {str(e)}'}), 500
 
 @main_routes.route('/')
 def index():
