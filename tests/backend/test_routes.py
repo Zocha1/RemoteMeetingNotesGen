@@ -83,7 +83,7 @@ def test_get_meetings_success(client):
     # Dodawanie danych testowych do bazy
     with client.application.app_context():
         meeting = Meetings(title="Test Meeting", scheduled_time=datetime.now(), platform="Test Platform")
-        transcription = Transcriptions(meeting_id=None, full_text="Test transcription", summary="Test summary")
+        transcription = Transcriptions(meeting_id=None, full_text="Test transcription", summary="Test summary", created_at=datetime.now())
         db.session.add(meeting)
         db.session.add(transcription)
         db.session.commit()
