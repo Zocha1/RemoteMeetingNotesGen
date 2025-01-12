@@ -1,4 +1,7 @@
-from backend.flask_api.app import create_app, models
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../backend/flask_api')))
+from app import create_app, models
 from datetime import datetime
 
 def add_test_data():
