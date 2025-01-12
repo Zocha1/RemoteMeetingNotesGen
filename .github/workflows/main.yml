@@ -79,7 +79,7 @@ jobs:
       - name: Install Playwright
         run: |
           cd tests/extension     
-          npm install playwright
+          npm install playwright @playwright/test
           npx playwright install chromium
 
       - name: Add node_modules to PATH
