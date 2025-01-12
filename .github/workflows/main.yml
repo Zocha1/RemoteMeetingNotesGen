@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test:
+  test-backend:
     runs-on: ubuntu-latest 
 
     steps:
@@ -64,3 +64,41 @@ jobs:
       with:
         name: pytest-results
         path: pytest-output.log
+
+  test-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+            node-version: '18'
+      
+      - name: Install Playwright
+        run: npx playwright install chromium
+      - name: Install system dependencies for Pillow
+        run: sudo apt-get update && sudo apt-get install -y libjpeg-dev zlib1g-dev
+      - name: Install Tesseract
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+
+      - name: Install dependencies
+        run: |
+          echo "Setting up virtual environment and installing dependencies..."
+          python -m venv venv  
+          source venv/bin/activate 
+          pip install -r backend/requirements.txt  
+      - name: Start Flask backend
+        run: |
+          source venv/bin/activate  
+          python -m backend.flask_api.run &
+          sleep 5  # Wait for Flask to start
+
+      - name: Add test data to database
+        run: |
+          source venv/bin/activate
+          python -c 'from your_app import create_app, models; from datetime import datetime; app = create_app(); with app.app_context(): meeting = models.Meetings(title="Test Meeting for Cypress", scheduled_time=datetime.now(), platform="Test Platform");transcription = models.Transcriptions(meeting_id=meeting.meeting_id, full_text="Test transcription for Cypress", summary="Test summary for Cypress"); models.db.session.add(meeting);models.db.session.add(transcription);models.db.session.commit()'
+      
+      - name: Run Playwright tests
+        run: npx playwright test tests/extension/extension.spec.js
