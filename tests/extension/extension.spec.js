@@ -13,12 +13,19 @@ test('should load the extension and interact with it', async () => {
         '--no-sandbox'
       ],
     });
+   const contexts = await browser.contexts(); // Pobierz contexty przeglądarki
+
+    if (contexts.length === 0) {
+       throw new Error("No context found"); // Jeżeli context nie istnieje, rzuć błąd
+   }
+
+
       const context = await browser.newContext();
       const page = await context.newPage();
       await page.goto('https://example.com');
 
      // Open extension popup
-     const extensionId = (await context.browser().contexts())[0]._options.args[0].match(/chrome-extension:\/\/([a-z]+)\//)[1];
+     const extensionId = (contexts)[0]._options.args[0].match(/chrome-extension:\/\/([a-z]+)\//)[1];
     
         const extensionPage = await context.newPage();
         await extensionPage.goto(`chrome-extension://${extensionId}/index.html`);
@@ -43,8 +50,6 @@ test('should load the extension and interact with it', async () => {
                  });
              })
           })
-
-
 
     await browser.close();
   });
