@@ -98,7 +98,7 @@ jobs:
       - name: Add test data to database
         run: |
           source venv/bin/activate
-          python -c 'from your_app import create_app, models; from datetime import datetime; app = create_app(); with app.app_context(): meeting = models.Meetings(title="Test Meeting for Cypress", scheduled_time=datetime.now(), platform="Test Platform");transcription = models.Transcriptions(meeting_id=meeting.meeting_id, full_text="Test transcription for Cypress", summary="Test summary for Cypress"); models.db.session.add(meeting);models.db.session.add(transcription);models.db.session.commit()'
+          python -c 'from your_app import create_app, models; from datetime import datetime; app = create_app(); with app.app_context(): meeting = models.Meetings(title="Test Meeting for Cypress", scheduled_time=datetime.now(), platform="Test Platform");transcription = models.Transcriptions(meeting_id=meeting.meeting_id, full_text="Test transcription for Cypress", summary="Test summary for Cypress", created_at="datetime.now()"); models.db.session.add(meeting);models.db.session.add(transcription);models.db.session.commit()'
       
       - name: Run Playwright tests
         run: npx playwright test tests/extension/extension.spec.js
