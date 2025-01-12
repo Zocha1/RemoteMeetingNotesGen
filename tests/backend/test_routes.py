@@ -69,15 +69,53 @@ def test_add_meeting_missing_participant_data(client):
     assert response.status_code == 400
     assert response.get_json()['error'] == "Each participant must have firstname, lastname, and email"
 
+
 def test_get_meetings_success(client):
     """Test successful retrieval of meetings."""
-    response = client.get('/get-meetings')
-    assert response.status_code == 200
-    data = response.get_json()
-    assert "message" in data
-    assert "meetings" in data
-    assert isinstance(data['meetings'], list)
+    # Dodawanie danych testowych do bazy
+    with client.application.app_context():
+        meeting = Meetings(title="Test Meeting", scheduled_time=datetime.now(), platform="Test Platform")
+        transcription = Transcriptions(meeting_id=None, full_text="Test transcription", summary="Test summary")
+        db.session.add(meeting)
+        db.session.add(transcription)
+        db.session.commit()
 
+    response = client.get('/meeting-data')
+    assert response.status_code == 200
+    data = json.loads(response.data)
+    assert isinstance(data, list)
+    assert len(data) > 0
+    meeting = data[0]
+    assert 'meeting_id' in meeting
+    assert 'title' in meeting
+    assert 'scheduled_time' in meeting
+    assert 'platform' in meeting
+    assert 'transcriptions' in meeting
+    assert isinstance(meeting["transcriptions"], list)
+    assert len(meeting["transcriptions"]) >0
+    transcription = meeting["transcriptions"][0]
+    assert 'transcription_id' in transcription
+    assert 'full_text' in transcription
+    assert 'summary' in transcription
+
+def test_get_meeting_details_success(client):
+    """Test successful retrieval of a specific meeting's details."""
+     # Dodawanie danych testowych do bazy
+    with client.application.app_context():
+        meeting = Meetings(title="Test Meeting", scheduled_time=datetime.now(), platform="Test Platform")
+        transcription = Transcriptions(meeting_id=None, full_text="Test transcription", summary="Test summary")
+        db.session.add(meeting)
+        db.session.add(transcription)
+        db.session.commit()
+
+        meeting_id = meeting.meeting_id
+    
+    response = client.get(f'/meeting-details/{meeting_id}')
+    assert response.status_code == 200
+    assert b"<title>Meeting Details</title>" in response.data
+    assert b"Test Meeting" in response.data
+    assert b"Test transcription" in response.data
+    assert b"Test summary" in response.data
 
 def test_routes_rendering(client):
     """Test rendering of HTML pages."""
