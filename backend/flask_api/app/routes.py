@@ -9,6 +9,7 @@ from PIL import Image
 import pytesseract
 from pytesseract import Output
 import requests
+#from xhtml2pdf import pisa
 from .audio_processing import process_audio_to_text
 from .email_service import send_meeting_notes_email
 
@@ -320,7 +321,7 @@ def send_notes_email_endpoint(meeting_id):
           
 @main_routes.route('/download-meeting-data/<string:output_format>/<int:meeting_id>', methods=['GET'])
 def download_meeting_data_md(output_format, meeting_id):
-    """Pobiera dane konkretnego spotkania i jego transkrypcję i zwraca w pliku .md"""
+    """Pobiera dane konkretnego spotkania i jego transkrypcję i zwraca w pliku .txt, .md, .html lub .pdf."""
     try:
          # Pobierz spotkanie z bazy danych
         meeting = Meetings.query.filter_by(meeting_id=meeting_id).first_or_404()
@@ -334,7 +335,7 @@ def download_meeting_data_md(output_format, meeting_id):
         for screenshot in screenshots:
             ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
             if ocr_result:
-                ocr_texts.append(f"Screenshot text: {ocr_result.text}")
+                ocr_texts.append(f"Screenshot {screenshot.screenshot_id} text: {ocr_result.text}")
 
         if output_format == 'md':
             text_output = f"## Meeting ID: {meeting.meeting_id}\n"
@@ -390,6 +391,62 @@ def download_meeting_data_md(output_format, meeting_id):
                 download_name=f"meeting_{meeting_id}_data.txt",
                 mimetype='text/plain'
             )
+        elif output_format == 'html': #or output_format == 'pdf'
+            styles = """
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                        padding: 20px;
+                        background-color: #f4f4f9;
+                        color: #333;
+                    }
+                    h2 {
+                        color: #0056b3;
+                        border-bottom: 2px solid #0056b3;
+                        padding-bottom: 5px;
+                    }
+                    p {
+                        line-height: 1.6;
+                    }
+                    .highlight {
+                        background-color: #dff0d8;
+                        padding: 5px;
+                        border-left: 4px solid #3c763d;
+                    }
+                </style>
+                """
+            text_output = "<html><head>"
+            text_output += styles
+            text_output += "</head><body>"
+            text_output += f"<h2>Meeting ID: {meeting.meeting_id}</h2>"
+            text_output += f"<h2>Title: {meeting.title}</h2>"
+            text_output += f"<h2>Scheduled Time: {meeting.scheduled_time}</h2>"
+            text_output += f"<h2>Platform: {meeting.platform}</h2>"
+        
+            if transcription:
+                text_output += f"<h2>Transcription:</h2><p>{transcription.full_text}</p>"
+                text_output += f"<h2>Summary:</h2><p>{transcription.summary}</p>"
+                # Add OCR data
+                text_output += f"<h2>OCR Results:</h2><p>{"".join(ocr_texts)}</p>"
+            else:
+                text_output += "<h2>No Transcription data available</h2>"
+            text_output += "</body></html>"
+            
+            # Generowanie pliku HTML
+            output = StringIO()
+            output.write(text_output)
+            mem = BytesIO()
+            mem.write(output.getvalue().encode('utf-8'))
+            mem.seek(0)
+
+            return send_file(
+                mem,
+                as_attachment=True,
+                download_name=f"meeting_{meeting_id}_data.html",
+                mimetype='text/html'
+            )
+
 
     except Exception as e:
         return jsonify({'error': f'Failed to fetch data and generate md file: {str(e)}'}), 500
