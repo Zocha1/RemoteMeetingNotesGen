@@ -16,3 +16,5 @@ backend/flask_api/mydb.db
 instance/
 .env
 client_secret.json
+/tests/extension/node_modules/
+/tests/extension/test-results

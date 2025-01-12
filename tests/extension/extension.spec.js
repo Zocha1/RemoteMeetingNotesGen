@@ -1,9 +1,8 @@
 // tests/extension/extension.spec.js
-const { chromium } = require('playwright');
+import { test, chromium } from '@playwright/test';
 const path = require('path');
 
-describe('Chrome Extension Test', () => {
-  it('should load the extension and interact with it', async () => {
+test('should load the extension and interact with it', async () => {
     const pathToExtension = path.join(__dirname, '../../extension'); // Update with the actual path
     const browser = await chromium.launch({
       headless: true,
@@ -49,4 +48,3 @@ describe('Chrome Extension Test', () => {
 
     await browser.close();
   });
-});

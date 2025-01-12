@@ -107,9 +107,11 @@ jobs:
         run: |
           source venv/bin/activate
           python tests/extension/add_test_data.py
+      
+      - name: Install Playwright dependecies
+        run: cd tests/extension && npm install
 
       - name: Run Playwright tests
         run: |
           cd tests/extension
-          npm install playwright
-          npx playwright test extension.spec.js
+          node_modules/.bin/playwright test
