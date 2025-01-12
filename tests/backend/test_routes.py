@@ -1,4 +1,12 @@
 import pytest
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../backend/flask_api')))
+import pytest
+import json
+from app import create_app
+from app.models import *
+from datetime import datetime
 
 @pytest.fixture
 def client(app):
@@ -119,7 +127,7 @@ def test_get_meeting_details_success(client):
 
 def test_routes_rendering(client):
     """Test rendering of HTML pages."""
-    endpoints = ['/', '/recording', '/notes']
+    endpoints = ['/home', '/plan-meeting', '/notes']
     for endpoint in endpoints:
         response = client.get(endpoint)
         assert response.status_code == 200

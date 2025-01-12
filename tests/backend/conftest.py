@@ -1,12 +1,14 @@
 import sys
 import os
 import pytest
+import json
+from datetime import datetime
 
 # Add `backend/flask_api` to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../backend/flask_api')))
 
 from app import create_app  # Import your Flask app creation function
-from app.models import db # Import database initialization 
+from app.models import * # Import database initialization 
 
 @pytest.fixture
 def app():
