@@ -8,7 +8,7 @@ load_dotenv()
 
 
 
-def send_meeting_notes_email(recipients, meeting_title, transcription, summary):
+def send_meeting_notes_email(recipients, meeting_title, transcription, summary, ocr_texts):
     """
     Wysyła e-mail z notatkami ze spotkania za pomocą Sendinblue API.
     """
@@ -31,6 +31,8 @@ def send_meeting_notes_email(recipients, meeting_title, transcription, summary):
                 <p>{transcription}</p>
                  <h2>Summary:</h2>
                 <p>{summary}</p>
+                <h2>OCR Text:</h2>
+                 {"".join(ocr_texts)}
              </body>
             </html>
         """

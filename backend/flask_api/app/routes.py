@@ -243,7 +243,7 @@ def upload_screenshot():
 
         # 2) Dodanie do bazy - tabela 'Screenshots'
         new_screenshot = Screenshots(
-            meeting_id=None,  # Wstaw tutaj właściwe ID spotkania, jeśli to ma być powiązane
+            meeting_id=last_meeting.meeting_id,  # Wstaw tutaj właściwe ID spotkania, jeśli to ma być powiązane
             image_path=file_path,
             timestamp=datetime.now()
         )
@@ -288,7 +288,7 @@ def upload_screenshot():
 @main_routes.route('/send-notes-email/<int:meeting_id>', methods=['POST'])
 def send_notes_email_endpoint(meeting_id):
     """
-      Pobiera transkrypcję i podsumowanie z bazy danych i wysyła je mailem.
+      Pobiera transkrypcję, podsumowanie, ocr z bazy danych i wysyła je mailem.
     """
     try:
        # Pobierz spotkanie z bazy danych
@@ -299,9 +299,17 @@ def send_notes_email_endpoint(meeting_id):
          # Pobierz dane do maila, i wyślij wiadomość
         if transcription:
            ##emails = [Users.query.filter_by(user_id = participant.user_id).first().email for participant in participants]
-           emails = ["heniekkombajnista666@gmail.com"]
-           send_meeting_notes_email(emails, meeting.title, transcription.full_text, transcription.summary)
-           return jsonify({'message': 'Email sent successfully'}), 200
+            emails = ["heniekkombajnista666@gmail.com"]
+            screenshots = Screenshots.query.filter_by(meeting_id=meeting_id).all()
+            ocr_texts = []
+            for screenshot in screenshots:
+                ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
+                if ocr_result:
+                   ocr_texts.append(f"<p><strong>Screenshot {screenshot.screenshot_id} text:</strong> {ocr_result.text}  </p></br>")
+            print(f"OCR texts: {ocr_texts}")
+            
+            send_meeting_notes_email(emails, meeting.title, transcription.full_text, transcription.summary, ocr_texts)
+            return jsonify({'message': 'Email sent successfully'}), 200
         else:
             return jsonify({'error': f'No transription found'}), 404
     except Exception as e:
