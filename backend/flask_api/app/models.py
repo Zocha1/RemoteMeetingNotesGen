@@ -120,13 +120,11 @@ class OCR(db.Model):
     ocr_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     screenshot_id = db.Column(db.Integer, db.ForeignKey('screenshots.screenshot_id'))
     text = db.Column(db.Text)
-    confidence = db.Column(db.Float)
-    
-    def __init__(self, screenshot_id, text, confidence):
+        
+    def __init__(self, screenshot_id, text):
         self.screenshot_id = screenshot_id
         self.text = text
-        self.confidence = confidence
         
     def __repr__(self):
-        return f"({self.ocr_id}), Screenshot ID: {self.screenshot_id}, Recognized text: {self.text}, Confidence: {self.confidence}"
+        return f"({self.ocr_id}), Screenshot ID: {self.screenshot_id}, Recognized text: {self.text}"
 

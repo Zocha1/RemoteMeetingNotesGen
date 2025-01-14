@@ -5,14 +5,12 @@ import time
 import os
 from io import StringIO, BytesIO
 from .models import *
-from PIL import Image
-import pytesseract
-from pytesseract import Output
 import requests
 #from xhtml2pdf import pisa
 from .audio_processing import process_audio_to_text
 from .email_service import send_meeting_notes_email
-
+from .image_processing import detect_whiteboard, crop_and_save_whiteboard
+import easyocr
 
 
 # Define Blueprint
@@ -220,68 +218,66 @@ def upload_screenshot():
         return jsonify({'error': 'Image data is missing'}), 400
 
     try:
-    # 1) Dekodowanie base64 i zapis pliku
         image_data = data['image'].split(",")[1]
         image_data = base64.b64decode(image_data)
 
-        try:
-            last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
-            if last_meeting:
-                meeting_id = str(last_meeting.meeting_id)
-            else:
-                return jsonify({'error': 'No meeting found in database'}), 404
-        except Exception as e:
-             return jsonify({'error': f'Failed to fetch last meeting ID: {str(e)}'}), 500
+        last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+        if not last_meeting:
+            return jsonify({'error': 'No meeting found in database'}), 404
 
         screenshot_upload_folder = current_app.config['SCREENSHOT_UPLOAD_FOLDER']
-        meeting_folder = os.path.join(screenshot_upload_folder, meeting_id)
+        meeting_folder = os.path.join(screenshot_upload_folder, str(last_meeting.meeting_id))
         os.makedirs(meeting_folder, exist_ok=True)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         file_path = os.path.join(meeting_folder, f'screenshot_{timestamp}.png')
-        
-        # Zapisywanie na dysku
+
         with open(file_path, 'wb') as f:
             f.write(image_data)
 
-        # 2) Dodanie do bazy - tabela 'Screenshots'
-        new_screenshot = Screenshots(
-            meeting_id=last_meeting.meeting_id,  # Wstaw tutaj właściwe ID spotkania, jeśli to ma być powiązane
-            image_path=file_path,
-            timestamp=datetime.now()
-        )
-        db.session.add(new_screenshot)
-        # flush() aby mieć screenshot_id
-        db.session.flush()
+        reader = easyocr.Reader(['en', 'pl'])
+        contours = detect_whiteboard(file_path)
+        if contours:
+            cropped_path = os.path.join(meeting_folder, 'whiteboards')
+            os.makedirs(cropped_path, exist_ok=True)
+            crop_and_save_whiteboard(file_path, cropped_path, contours)
 
-        # 3) Przetwarzanie OCR (pytesseract)
-        img = Image.open(file_path)
+            for i, file in enumerate(os.listdir(cropped_path)):
+                cropped_img_path = os.path.join(cropped_path, file)
+                ocr_results = reader.readtext(cropped_img_path, detail=0)
 
-        # Proste odczytanie tekstu:
-        recognized_text = pytesseract.image_to_string(img, lang='eng')
+                cropped_screenshot = Screenshots(
+                    meeting_id=last_meeting.meeting_id,
+                    image_path=cropped_img_path,
+                    timestamp=datetime.now()
+                )
+                db.session.add(cropped_screenshot)
+                db.session.flush()
 
-        # Wyliczenie średniego confidence:
-        ocr_data = pytesseract.image_to_data(img, lang='eng', output_type=Output.DICT)
-        confidences = [c for c in ocr_data['conf'] if c >= 0]
-        average_conf = sum(confidences) / len(confidences) if len(confidences) > 0 else 0.0
+                ocr_result = OCR(
+                    screenshot_id=cropped_screenshot.screenshot_id,
+                    text="\n".join(ocr_results) if ocr_results else "No text recognized"
+                )
+                db.session.add(ocr_result)
 
-        # 4) Dodanie wpisu w tabeli 'OCR'
-        ocr_result = OCR(
-            screenshot_id=new_screenshot.screenshot_id,
-            text=recognized_text,
-            confidence=average_conf
-        )
-        db.session.add(ocr_result)
+        else:
+            ocr_results = reader.readtext(file_path, detail=0)
 
-        # 5) Commit zmian w bazie
+            new_screenshot = Screenshots(
+                meeting_id=last_meeting.meeting_id,
+                image_path=file_path,
+                timestamp=datetime.now()
+            )
+            db.session.add(new_screenshot)
+            db.session.flush()
+
+            ocr_result = OCR(
+                screenshot_id=new_screenshot.screenshot_id,
+                text="\n".join(ocr_results) if ocr_results else "No text recognized"
+            )
+            db.session.add(ocr_result)
+
         db.session.commit()
-
-        # 6) Odpowiedź do wtyczki
-        return jsonify({
-            'message': 'Screenshot saved and OCR processed successfully',
-            'file_path': file_path,
-            'recognized_text': recognized_text,
-            'confidence': average_conf
-        }), 200
+        return jsonify({'message': 'Screenshot and OCR processed successfully'}), 200
 
     except Exception as e:
         db.session.rollback()
@@ -428,7 +424,7 @@ def download_meeting_data_md(output_format, meeting_id):
                 text_output += f"<h2>Transcription:</h2><p>{transcription.full_text}</p>"
                 text_output += f"<h2>Summary:</h2><p>{transcription.summary}</p>"
                 # Add OCR data
-                text_output += f"<h2>OCR Results:</h2><p>{"".join(ocr_texts)}</p>"
+                text_output += f"<h2>OCR Results:</h2><p>{''.join(ocr_texts)}</p>"
             else:
                 text_output += "<h2>No Transcription data available</h2>"
             text_output += "</body></html>"
