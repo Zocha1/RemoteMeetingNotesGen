@@ -454,39 +454,19 @@ def download_meeting_data_md(output_format, meeting_id):
                 text_output += "<h2>No Transcription data available</h2>"
             text_output += "</body></html>"
             
-            if output_format == 'pdf':
-                wkhtmltopdf_config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-                options = {
-                    'enable-local-file-access': True,
-                    'quiet': ''
-                }
-                with tempfile.NamedTemporaryFile(suffix=".pdf") as tmp:
-                    pdfkit.from_string(text_output, tmp.name, configuration=wkhtmltopdf_config, options=options)
-                    mem = BytesIO()
-                    with open(tmp.name, "rb") as f:
-                        mem.write(f.read())
-                    mem.seek(0)
-                
-                return send_file(
-                     mem,
-                     as_attachment=True,
-                     download_name=f"meeting_{meeting_id}_data.pdf",
-                     mimetype='application/pdf'
-                    )
-            elif output_format == 'html':
-                # Generowanie pliku HTML
-                output = StringIO()
-                output.write(text_output)
-                mem = BytesIO()
-                mem.write(output.getvalue().encode('utf-8'))
-                mem.seek(0)
+            
+            output = StringIO()
+            output.write(text_output)
+            mem = BytesIO()
+            mem.write(output.getvalue().encode('utf-8'))
+            mem.seek(0)
 
-                return send_file(
-                    mem,
-                    as_attachment=True,
-                    download_name=f"meeting_{meeting_id}_data.html",
-                    mimetype='text/html'
-                )
+            return send_file(
+                mem,
+                as_attachment=True,
+                download_name=f"meeting_{meeting_id}_data.html",
+                mimetype='text/html'
+            )
 
         elif output_format == 'pdf':
             
