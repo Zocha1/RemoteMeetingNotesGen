@@ -11,6 +11,17 @@ from .audio_processing import process_audio_to_text
 from .email_service import send_meeting_notes_email
 from .image_processing import detect_whiteboard, crop_and_save_whiteboard
 import easyocr
+# import pdfkit
+import tempfile
+# imports for generating pdf files
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph, SimpleDocTemplate
+from reportlab.lib.units import inch
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 
 # Define Blueprint
@@ -328,10 +339,10 @@ def download_meeting_data_md(output_format, meeting_id):
 
         # Pobierz OCR texty powiązane ze screenami
         ocr_texts = []
-        for screenshot in screenshots:
-            ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
-            if ocr_result:
-                ocr_texts.append(f"Screenshot {screenshot.screenshot_id} text: {ocr_result.text}")
+        # for screenshot in screenshots:
+        #     ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
+        #     if ocr_result:
+        #         ocr_texts.append(f"Screenshot {screenshot.screenshot_id} text: {ocr_result.text}")
 
         if output_format == 'md':
             text_output = f"## Meeting ID: {meeting.meeting_id}\n"
@@ -343,6 +354,11 @@ def download_meeting_data_md(output_format, meeting_id):
                 text_output += f"## Transcription:\n{transcription.full_text}\n\n"
                 text_output += f"## Summary:\n{transcription.summary}\n\n"
                 # Add OCR data
+                for screenshot in screenshots:
+                    ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
+                    if ocr_result:
+                        ocr_texts.append(f"### Screenshot {screenshot.screenshot_id} text: \n{ocr_result.text}\n")
+
                 text_output += f"## OCR Results:\n{os.linesep.join(ocr_texts)}\n"
             else:
                 text_output += "## No Transcription data available\n"
@@ -369,6 +385,11 @@ def download_meeting_data_md(output_format, meeting_id):
                 text_output += f"Transcription:\n{transcription.full_text}\n\n"
                 text_output += f"Summary:\n{transcription.summary}\n\n"
                 # Add OCR data
+                for screenshot in screenshots:
+                    ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
+                    if ocr_result:
+                        ocr_texts.append(f"Screenshot {screenshot.screenshot_id} text:\n {ocr_result.text}\n")
+
                 text_output += f"OCR Results:\n{os.linesep.join(ocr_texts)}\n"
             else:
                 text_output += "No Transcription data available\n"
@@ -387,7 +408,7 @@ def download_meeting_data_md(output_format, meeting_id):
                 download_name=f"meeting_{meeting_id}_data.txt",
                 mimetype='text/plain'
             )
-        elif output_format == 'html': #or output_format == 'pdf'
+        elif output_format == 'html':# or output_format == 'pdf':
             styles = """
                 <style>
                     body {
@@ -424,28 +445,102 @@ def download_meeting_data_md(output_format, meeting_id):
                 text_output += f"<h2>Transcription:</h2><p>{transcription.full_text}</p>"
                 text_output += f"<h2>Summary:</h2><p>{transcription.summary}</p>"
                 # Add OCR data
+                for screenshot in screenshots:
+                    ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
+                    if ocr_result:
+                        ocr_texts.append(f"<p><strong>Screenshot {screenshot.screenshot_id} text:</strong> {ocr_result.text}  </p>")
                 text_output += f"<h2>OCR Results:</h2><p>{''.join(ocr_texts)}</p>"
             else:
                 text_output += "<h2>No Transcription data available</h2>"
             text_output += "</body></html>"
             
-            # Generowanie pliku HTML
-            output = StringIO()
-            output.write(text_output)
-            mem = BytesIO()
-            mem.write(output.getvalue().encode('utf-8'))
-            mem.seek(0)
+            if output_format == 'pdf':
+                wkhtmltopdf_config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+                options = {
+                    'enable-local-file-access': True,
+                    'quiet': ''
+                }
+                with tempfile.NamedTemporaryFile(suffix=".pdf") as tmp:
+                    pdfkit.from_string(text_output, tmp.name, configuration=wkhtmltopdf_config, options=options)
+                    mem = BytesIO()
+                    with open(tmp.name, "rb") as f:
+                        mem.write(f.read())
+                    mem.seek(0)
+                
+                return send_file(
+                     mem,
+                     as_attachment=True,
+                     download_name=f"meeting_{meeting_id}_data.pdf",
+                     mimetype='application/pdf'
+                    )
+            elif output_format == 'html':
+                # Generowanie pliku HTML
+                output = StringIO()
+                output.write(text_output)
+                mem = BytesIO()
+                mem.write(output.getvalue().encode('utf-8'))
+                mem.seek(0)
 
+                return send_file(
+                    mem,
+                    as_attachment=True,
+                    download_name=f"meeting_{meeting_id}_data.html",
+                    mimetype='text/html'
+                )
+
+        elif output_format == 'pdf':
+            
+            font_path =  current_app.config['FONTS_UPLOAD_FOLDER'] + "/DejaVuSans.ttf"
+            pdfmetrics.registerFont(TTFont('DejaVuSans', font_path))
+            font_path_bold = current_app.config['FONTS_UPLOAD_FOLDER'] + "/DejaVuSans-Bold.ttf"
+            pdfmetrics.registerFont(TTFont('DejaVuSans-Bold', font_path_bold))
+
+            mem = BytesIO()
+            doc = SimpleDocTemplate(mem, pagesize=letter)
+            styles = getSampleStyleSheet()
+             # Ustawienia stylu do poprawnego wyświetlania polskich znaków
+            style_h2 = ParagraphStyle(
+                 name='CustomH2',
+                 parent=styles['h2'],
+                 fontName='DejaVuSans-Bold',
+            )
+            style_normal = ParagraphStyle(
+                name='CustomNormal',
+                parent=styles['Normal'],
+                fontName='DejaVuSans',
+            )
+            story = []
+            story.append(Paragraph(f"<b>Meeting ID:</b> {meeting.meeting_id}", style_h2))
+            story.append(Paragraph(f"<b>Title:</b> {meeting.title}", style_h2))
+            story.append(Paragraph(f"<b>Scheduled Time:</b> {meeting.scheduled_time}", style_h2))
+            story.append(Paragraph(f"<b>Platform:</b> {meeting.platform}", style_h2))
+            if transcription:
+                story.append(Paragraph(f"<b>Transcription:</b>", style_h2))
+                story.append(Paragraph(transcription.full_text, style_normal))
+                story.append(Paragraph(f"<b>Summary:</b>", style_h2))
+                story.append(Paragraph(transcription.summary, style_normal))
+
+                if screenshots:
+                    story.append(Paragraph(f"<b>OCR Results:</b>", style_h2))
+                    for screenshot in screenshots:
+                         ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
+                         if ocr_result:
+                               story.append(Paragraph(f"<b>Screenshot {screenshot.screenshot_id} text:</b>", styles['h4']))
+                               story.append(Paragraph(ocr_result.text, style_normal))
+            else:
+               story.append(Paragraph("<b>No Transcription data available</b>", styles['h2']))
+
+            doc.build(story)
+            mem.seek(0)
             return send_file(
                 mem,
                 as_attachment=True,
-                download_name=f"meeting_{meeting_id}_data.html",
-                mimetype='text/html'
+                download_name=f"meeting_{meeting_id}_data.pdf",
+                mimetype='application/pdf'
             )
-
-
+        
     except Exception as e:
-        return jsonify({'error': f'Failed to fetch data and generate md file: {str(e)}'}), 500
+        return jsonify({'error': f'Failed to fetch data and generate {output_format} file: {str(e)}'}), 500
 
 @main_routes.route('/')
 def index():

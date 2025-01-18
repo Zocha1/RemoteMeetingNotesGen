@@ -21,6 +21,10 @@ def create_app():
         os.makedirs(AUDIO_UPLOAD_FOLDER)
     app.config['AUDIO_UPLOAD_FOLDER'] = AUDIO_UPLOAD_FOLDER
 
+    FONTS_UPLOAD_FOLDER = os.path.join(resources_dir, 'fonts')
+    if not os.path.exists(FONTS_UPLOAD_FOLDER):
+        os.makedirs(FONTS_UPLOAD_FOLDER)
+    app.config['FONTS_UPLOAD_FOLDER'] = FONTS_UPLOAD_FOLDER
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
