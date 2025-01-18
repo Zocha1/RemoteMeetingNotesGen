@@ -1,16 +1,42 @@
-document.getElementById('start-recording').addEventListener('click', startRecording);
-document.getElementById('stop-recording').addEventListener('click', stopRecording);
+// document.getElementById('start-recording').addEventListener('click', startRecording);
+// document.getElementById('stop-recording').addEventListener('click', stopRecording);
 
 document.addEventListener('DOMContentLoaded', function () {
-    const startRecordingButton = document.getElementById('start-recording');
-    const stopRecordingButton = document.getElementById('stop-recording');
+    const form = document.getElementById('meeting-form');
 
-    if (startRecordingButton) {
-        startRecordingButton.addEventListener('click', startRecording);
-    }
+    if (form) {
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Zapobiega domyślnemu przesyłaniu formularza
 
-    if (stopRecordingButton) {
-        stopRecordingButton.addEventListener('click', stopRecording);
+            const meetingData = {
+                title: document.getElementById('meeting-title').value,
+                scheduled_time: `${document.getElementById('meeting-date').value}T${document.getElementById('start-time').value}:00`,
+                platform: document.getElementById('selected-platform').value, // Pobierz wybraną platformę
+                participants: [] // Możesz dodać obsługę uczestników, jeśli jest wymagana
+            };
+
+            try {
+                const response = await fetch('/add-meeting', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(meetingData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert('Meeting saved successfully!');
+                    console.log(data);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.error}`);
+                }
+            } catch (err) {
+                console.error('Error saving meeting:', err);
+                alert('An error occurred while saving the meeting.');
+            }
+        });
+    } else {
+        console.error('Form element not found!');
     }
 });
 
@@ -78,3 +104,14 @@ async function syncZoomMeeting() {
         alert(`Error: ${data.error}`);
     }
 }
+
+document.querySelectorAll('.platform-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        // Usuń klasę "selected" z wszystkich przycisków
+        document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('selected'));
+        // Dodaj klasę "selected" do klikniętego przycisku
+        button.classList.add('selected');
+        // Ustaw wartość wybranej platformy w ukrytym polu
+        document.getElementById('selected-platform').value = button.getAttribute('data-platform');
+    });
+});

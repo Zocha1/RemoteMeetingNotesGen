@@ -6,47 +6,57 @@
 {% endblock %}
 
 {% block content %}
-
-    <h1>Plan Meeting</h1>
-
-    <div class="form-container">
-        <form>
-            <label for="meeting-title">Meeting Title:</label>
-            <input type="text" id="meeting-title" name="meeting-title" placeholder="Enter meeting title" required>
-
-            <label for="meeting-date" style="margin-top: 20px;">Select Meeting Date:</label>
-            <input type="date" id="meeting-date" name="meeting-date" class="calendar-input" required>
-
-            <label for="start-time">Start Time:</label>
-            <input type="time" id="start-time" name="start-time" required>
-
-            <label for="end-time">End Time (Optional):</label>
-            <input type="time" id="end-time" name="end-time">
-
-            <div class="integration">
-                <input type="checkbox" id="zoom" name="platform" value="zoom">
-                <label for="zoom">Zoom</label>
-
-                <input type="checkbox" id="teams" name="platform" value="teams">
-                <label for="teams">Microsoft Teams</label>
-
-                <input type="checkbox" id="google-meet" name="platform" value="google-meet">
-                <label for="google-meet">Google Meet</label>
+<div class="container">
+    <h1 class="title">Plan Your Meeting</h1>
+    <div class="card">
+        <form id="meeting-form" class="form-container">
+            <div class="form-group">
+                <label for="meeting-title">Meeting Title:</label>
+                <input type="text" id="meeting-title" name="meeting-title" placeholder="Enter meeting title" required>
             </div>
-            <button type="button" onclick="authorizeGoogle()">Authorize Google</button>
-            <button type="button" onclick="syncMeeting()">Sync with Google Calendar</button>
 
-            <button type="button" onclick="authorizeZoom()">Authorize Zoom</button>
-            <button type="button" onclick="syncZoomMeeting()">Sync with Zoom</button>
+            <div class="form-group">
+                <label for="meeting-date">Select Meeting Date:</label>
+                <input type="date" id="meeting-date" name="meeting-date" required>
+            </div>
 
+            <div class="form-group">
+                <label for="start-time">Start Time:</label>
+                <input type="time" id="start-time" name="start-time" required>
+            </div>
 
+            <div class="form-group">
+                <label for="end-time">End Time:</label>
+                <input type="time" id="end-time" name="end-time">
+            </div>
 
-            <button type="submit">Save Meeting</button>
+            <div class="form-group">
+                <label>Select Platform:</label>
+                <div class="platform-buttons">
+                    <button type="button" class="platform-btn" data-platform="zoom">Zoom</button>
+                    <button type="button" class="platform-btn" data-platform="google-meet">Google Meet</button>
+                    <button type="button" class="platform-btn" data-platform="teams">Microsoft Teams</button>
+                </div>
+            </div>
+
+            <!-- Przyciski Google -->
+            <div class="form-group">
+                <button type="button" onclick="authorizeGoogle()" class="btn-google">Authorize Google</button>
+                <button type="button" onclick="syncMeeting()" class="btn-google">Sync with Google Calendar</button>
+            </div>
+
+            <!-- Przyciski Zoom -->
+            <div class="form-group">
+                <button type="button" onclick="authorizeZoom()" class="btn-zoom">Authorize Zoom</button>
+                <button type="button" onclick="syncZoomMeeting()" class="btn-zoom">Sync with Zoom</button>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save Meeting</button>
+            </div>
         </form>
     </div>
-    <script src="../static/script.js"></script>
-
-</body>
-</html>
+</div>
+<script src="../static/script.js"></script>
 
 {% endblock %}
