@@ -17,12 +17,12 @@ import tempfile
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import Paragraph, SimpleDocTemplate
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Image
 from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-
+from PIL import Image as PILImage 
 
 # Define Blueprint
 main_routes = Blueprint('main', __name__)
@@ -330,19 +330,14 @@ def send_notes_email_endpoint(meeting_id):
 def download_meeting_data_md(output_format, meeting_id):
     """Pobiera dane konkretnego spotkania i jego transkrypcję i zwraca w pliku .txt, .md, .html lub .pdf."""
     try:
-         # Pobierz spotkanie z bazy danych
+        # Pobierz spotkanie z bazy danych
         meeting = Meetings.query.filter_by(meeting_id=meeting_id).first_or_404()
         # Pobierz transkrypcje do tego spotkania
         transcription = Transcriptions.query.filter_by(meeting_id=meeting_id).first()
         # Pobierz screenshoty z bazy danych
         screenshots = Screenshots.query.filter_by(meeting_id=meeting_id).all()
 
-        # Pobierz OCR texty powiązane ze screenami
         ocr_texts = []
-        # for screenshot in screenshots:
-        #     ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
-        #     if ocr_result:
-        #         ocr_texts.append(f"Screenshot {screenshot.screenshot_id} text: {ocr_result.text}")
 
         if output_format == 'md':
             text_output = f"## Meeting ID: {meeting.meeting_id}\n"
@@ -357,7 +352,8 @@ def download_meeting_data_md(output_format, meeting_id):
                 for screenshot in screenshots:
                     ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
                     if ocr_result:
-                        ocr_texts.append(f"### Screenshot {screenshot.screenshot_id} text: \n{ocr_result.text}\n")
+                        formatted_timestamp = screenshot.timestamp.strftime('%Y-%m-%d %H:%M')
+                        ocr_texts.append(f"### Screenshot {formatted_timestamp} text: \n{ocr_result.text}\n")
 
                 text_output += f"## OCR Results:\n{os.linesep.join(ocr_texts)}\n"
             else:
@@ -388,7 +384,8 @@ def download_meeting_data_md(output_format, meeting_id):
                 for screenshot in screenshots:
                     ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
                     if ocr_result:
-                        ocr_texts.append(f"Screenshot {screenshot.screenshot_id} text:\n {ocr_result.text}\n")
+                        formatted_timestamp = screenshot.timestamp.strftime('%Y-%m-%d %H:%M')
+                        ocr_texts.append(f"Screenshot {formatted_timestamp} text:\n {ocr_result.text}\n")
 
                 text_output += f"OCR Results:\n{os.linesep.join(ocr_texts)}\n"
             else:
@@ -445,11 +442,14 @@ def download_meeting_data_md(output_format, meeting_id):
                 text_output += f"<h2>Transcription:</h2><p>{transcription.full_text}</p>"
                 text_output += f"<h2>Summary:</h2><p>{transcription.summary}</p>"
                 # Add OCR data
+                text_output += f"<h2>OCR Results:</h2><br>"
                 for screenshot in screenshots:
                     ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
                     if ocr_result:
-                        ocr_texts.append(f"<p><strong>Screenshot {screenshot.screenshot_id} text:</strong> {ocr_result.text}  </p>")
-                text_output += f"<h2>OCR Results:</h2><p>{''.join(ocr_texts)}</p>"
+                        formatted_timestamp = screenshot.timestamp.strftime('%Y-%m-%d %H:%M')
+                        text_output += f'<img src="{screenshot.image_path}" alt="Screenshot {formatted_timestamp}" width="750">'
+                        text_output += f"<p><strong>Screenshot {formatted_timestamp} text:</strong> {ocr_result.text}  </p><br>"
+                
             else:
                 text_output += "<h2>No Transcription data available</h2>"
             text_output += "</body></html>"
@@ -476,7 +476,7 @@ def download_meeting_data_md(output_format, meeting_id):
             pdfmetrics.registerFont(TTFont('DejaVuSans-Bold', font_path_bold))
 
             mem = BytesIO()
-            doc = SimpleDocTemplate(mem, pagesize=letter)
+            doc = SimpleDocTemplate(mem, pagesize=letter, author="Remote Meeting Notes Generator", title=f"Meeting {meeting.title} Notes", subject=f"Notes from {meeting.title} meeting")
             styles = getSampleStyleSheet()
              # Ustawienia stylu do poprawnego wyświetlania polskich znaków
             style_h2 = ParagraphStyle(
@@ -505,8 +505,27 @@ def download_meeting_data_md(output_format, meeting_id):
                     for screenshot in screenshots:
                          ocr_result = OCR.query.filter_by(screenshot_id=screenshot.screenshot_id).first()
                          if ocr_result:
-                               story.append(Paragraph(f"<b>Screenshot {screenshot.screenshot_id} text:</b>", styles['h4']))
-                               story.append(Paragraph(ocr_result.text, style_normal))
+                                try:
+                                    pil_image = PILImage.open(screenshot.image_path)
+                                    # img = Image(screenshot.image_path)
+                                    img_width, img_height = pil_image.size
+                                    max_width = 5.5*inch
+                                    max_height = 5.5*inch
+                                    scale_factor = min(max_width/img_width, max_height/img_height)
+                                    img = Image(screenshot.image_path, width=img_width * scale_factor, height = img_height * scale_factor)  
+                                    story.append(img)
+                                except Exception as e:
+                                    print(f"Failed to add image to PDF: {str(e)}")
+                                formatted_timestamp = screenshot.timestamp.strftime('%Y-%m-%d %H:%M')
+                                story.append(Paragraph(f"<b>Screenshot {formatted_timestamp} text:</b>", styles['h4']))
+                                story.append(Paragraph(ocr_result.text, style_normal))
+                                style_spaceAfter = ParagraphStyle(
+                                    name='space',
+                                    parent = style_normal,
+                                    spaceAfter = 0.2*inch
+                                )
+                                story.append(Paragraph(" ", style_spaceAfter))
+                                                
             else:
                story.append(Paragraph("<b>No Transcription data available</b>", styles['h2']))
 
