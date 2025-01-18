@@ -1,18 +1,65 @@
-document.getElementById('start-recording').addEventListener('click', startRecording);
-document.getElementById('stop-recording').addEventListener('click', stopRecording);
+//document.getElementById('start-recording').addEventListener('click', startRecording);
+//document.getElementById('stop-recording').addEventListener('click', stopRecording);
 
 document.addEventListener('DOMContentLoaded', function () {
-    const startRecordingButton = document.getElementById('start-recording');
-    const stopRecordingButton = document.getElementById('stop-recording');
+    const form = document.getElementById('meeting-form');
 
-    if (startRecordingButton) {
-        startRecordingButton.addEventListener('click', startRecording);
-    }
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
 
-    if (stopRecordingButton) {
-        stopRecordingButton.addEventListener('click', stopRecording);
-    }
+            const title = document.getElementById('meeting-title').value;
+            const meetingDate = document.getElementById('meeting-date').value;
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+
+            const platformCheckbox = document.querySelectorAll('input[name="platform"]:checked');
+            const platforms = Array.from(platformCheckbox).map(checkbox => checkbox.value);
+            const platform = platforms.length > 0 ? platforms[0] : '';
+
+            const participants = []; // for now let's leave it empty, because we don't have fields for them
+
+
+            // Combine date and time strings into one ISO formatted string
+            let scheduledTime = null;
+            if (startTime){
+                scheduledTime = new Date(meetingDate + 'T' + startTime).toISOString();
+                console.log("Scheduled Time:", scheduledTime)
+            }
+
+
+             const meetingData = {
+                title: title,
+                scheduled_time: scheduledTime,
+                platform: platform,
+                 participants: participants
+            };
+             console.log("Meeting Data:", meetingData)
+             fetch('/add-meeting', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(meetingData),
+                })
+             .then(response => {
+                 if (!response.ok) {
+                     return response.json().then(error => { throw new Error(error.error) });
+                    }
+                 return response.json();
+                })
+             .then(data => {
+                 console.log('Meeting added successfully:', data);
+                 alert('Meeting added successfully:!\nID: ' + data.meeting_id);
+            // Dodaj kod obsługujący sukces (np. przekierowanie)
+                })
+             .catch(error => {
+                console.error('Error adding meeting:', error);
+                alert('Error adding meeting: ' + error);
+                 // Dodaj kod do obsługi błędu
+             });
+      });
 });
+
 
 async function authorizeGoogle() {
     window.open('/authorize-google', '_blank');
