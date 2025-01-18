@@ -317,6 +317,13 @@ def upload_screenshot():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
+
+def parse_emails(emails_str):
+    """Parsuje string z emailem, zwraca listę stringow."""
+    if emails_str is None:
+        return []
+    return [email.strip() for email in emails_str.split(',')]
+
 @main_routes.route('/send-notes-email/<int:meeting_id>', methods=['POST'])
 def send_notes_email_endpoint(meeting_id):
     """
@@ -331,7 +338,9 @@ def send_notes_email_endpoint(meeting_id):
          # Pobierz dane do maila, i wyślij wiadomość
         if transcription:
            ##emails = [Users.query.filter_by(user_id = participant.user_id).first().email for participant in participants]
-            emails = ["heniekkombajnista666@gmail.com", "piotrrus2006@gmail.com"]
+           # emails = ["pawelrus.637@gmail.com"]
+            emails_str = os.getenv('EMAILS_TO_SEND')
+            emails = parse_emails(emails_str)
             screenshots = Screenshots.query.filter_by(meeting_id=meeting_id).all()
             ocr_texts = []
             for screenshot in screenshots:
