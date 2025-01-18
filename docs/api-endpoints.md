@@ -176,11 +176,6 @@ Ten endpoint służy do pobierania danych o spotkaniach z bazy danych.
 --- 
 
 
-
-
-
-# Dokumentacja API
-
 ## Endpoint `/upload-audio`
 
 Ten endpoint służy do przesyłania plików audio i ich transkrypcji do aktywnego spotkania.
@@ -268,6 +263,88 @@ file: <plik_audio.mp3>
 1. Plik audio jest zapisywany w folderze powiązanym z ID spotkania.
 2. Transkrypcja pliku audio jest wykonywana po jego przesłaniu.
 3. Wykorzystuje funkcję find_active_meeting aby zapisać plik audio do trwającego spotkania, w przypadku braku, zapisuje do ostatnio utworzonego.
+
+---
+
+## Endpoint `/upload-screenshot`
+
+Ten endpoint służy do przesyłania screenów i ich przetworzenia (OCR) do aktywnego spotkania.
+
+---
+
+### **Metoda:**
+
+`POST`
+
+---
+
+### **Nagłówki:**
+
+-   `Content-Type: application/json`
+
+---
+
+### **Body (JSON):**
+
+| Pole      | Typ    | Wymagane | Opis                 |
+|-----------|--------|----------|----------------------|
+| `image`  | string | Tak      | Dane obrazu w formacie base64 (z prefixem `"data:image/png;base64,"`). |
+
+---
+
+### **Przykład zapytania:**
+
+```json
+{
+  "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+}
+```
+
+---
+
+### **Odpowiedzi:**
+
+**Sukces (200 OK):**
+
+```json
+{
+  "message": "Screenshot and OCR processed successfully"
+}
+```
+
+**Błąd (400 Bad Request):**
+
+```json
+{
+  "error": "Image data is missing"
+}
+```
+**Błąd (404 Not Found):**
+ -  Gdy nie ma żadnego spotkania:
+
+```json
+{
+  "error": "No meeting found in database"
+}
+```
+
+**Błąd (500 Internal Server Error):**
+
+```json
+{
+  "error": "..."
+}
+```
+
+---
+
+### **Uwagi:**
+
+1.  Zdjęcie jest zapisywane w folderze powiązanym z ID spotkania.
+2.  Jeśli zostanie wykryta tablica, zostaną utworzone i zapisane dodatkowe zdjęcia z przyciętymi fragmentami tablicy.
+3.  Wykorzystuje funkcję find_active_meeting aby zapisać screen do trwającego spotkania, w przypadku braku, zapisuje do ostatnio utworzonego.
+
+---
 
 ---
 
@@ -380,85 +457,6 @@ Ten endpoint służy do pobierania szczegółowych danych o konkretnym spotkaniu
 
 ---
 
-## Endpoint `/upload-screenshot`
-
-Ten endpoint służy do przesyłania screenów i ich przetworzenia (OCR) do aktywnego spotkania.
-
----
-
-### **Metoda:**
-
-`POST`
-
----
-
-### **Nagłówki:**
-
--   `Content-Type: application/json`
-
----
-
-### **Body (JSON):**
-
-| Pole      | Typ    | Wymagane | Opis                 |
-|-----------|--------|----------|----------------------|
-| `image`  | string | Tak      | Dane obrazu w formacie base64 (z prefixem `"data:image/png;base64,"`). |
-
----
-
-### **Przykład zapytania:**
-
-```json
-{
-  "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-}
-```
-
----
-
-### **Odpowiedzi:**
-
-**Sukces (200 OK):**
-
-```json
-{
-  "message": "Screenshot and OCR processed successfully"
-}
-```
-
-**Błąd (400 Bad Request):**
-
-```json
-{
-  "error": "Image data is missing"
-}
-```
-**Błąd (404 Not Found):**
- -  Gdy nie ma żadnego spotkania:
-
-```json
-{
-  "error": "No meeting found in database"
-}
-```
-
-**Błąd (500 Internal Server Error):**
-
-```json
-{
-  "error": "..."
-}
-```
-
----
-
-### **Uwagi:**
-
-1.  Zdjęcie jest zapisywane w folderze powiązanym z ID spotkania.
-2.  Jeśli zostanie wykryta tablica, zostaną utworzone i zapisane dodatkowe zdjęcia z przyciętymi fragmentami tablicy.
-3.  Wykorzystuje funkcję find_active_meeting aby zapisać screen do trwającego spotkania, w przypadku braku, zapisuje do ostatnio utworzonego.
-
----
 
 ## Endpoint `/send-notes-email/<int:meeting_id>`
 
