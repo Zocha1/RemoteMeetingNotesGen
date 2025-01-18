@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app, render_template, send_file
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import os
 from io import StringIO, BytesIO
@@ -10,6 +10,7 @@ import requests
 from .audio_processing import process_audio_to_text
 from .email_service import send_meeting_notes_email
 from .image_processing import detect_whiteboard, crop_and_save_whiteboard
+from .active_meeting import find_active_meeting
 import easyocr
 # import pdfkit
 import tempfile
@@ -27,6 +28,26 @@ from PIL import Image as PILImage
 # Define Blueprint
 main_routes = Blueprint('main', __name__)
 
+# def find_active_meeting():
+#     current_time = datetime.now()
+#     tolerance = timedelta(minutes=10) # set the tolerance to 60 minutes
+
+#     active_meeting = None
+#     meetings = Meetings.query.all()
+#     for meeting in meetings:
+#         if meeting.scheduled_time and current_time - meeting.scheduled_time <= tolerance and current_time >= meeting.scheduled_time:
+#             active_meeting = meeting
+#             break
+
+#     if active_meeting == None:
+#         last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+#         if last_meeting:
+#             #meeting_id = str(last_meeting.meeting_id)
+#             return last_meeting
+#         else:
+#            return None
+#     return active_meeting
+
 @main_routes.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if 'file' not in request.files:
@@ -35,9 +56,10 @@ def upload_audio():
     audio_file = request.files['file']
 
     try:
-        last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
-        if last_meeting:
-            meeting_id = str(last_meeting.meeting_id)
+        active_meeting = find_active_meeting()
+        #last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+        if active_meeting:
+            meeting_id = str(active_meeting.meeting_id)
         else:
            return jsonify({'error': 'No meeting found in database'}), 404
     except Exception as e:
@@ -232,7 +254,8 @@ def upload_screenshot():
         image_data = data['image'].split(",")[1]
         image_data = base64.b64decode(image_data)
 
-        last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+        #last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+        last_meeting = find_active_meeting()
         if not last_meeting:
             return jsonify({'error': 'No meeting found in database'}), 404
 
@@ -250,7 +273,7 @@ def upload_screenshot():
         if contours:
             cropped_path = os.path.join(meeting_folder, 'whiteboards')
             os.makedirs(cropped_path, exist_ok=True)
-            crop_and_save_whiteboard(file_path, cropped_path, contours)
+            crop_and_save_whiteboard(file_path, cropped_path, contours, timestamp)
 
             for i, file in enumerate(os.listdir(cropped_path)):
                 cropped_img_path = os.path.join(cropped_path, file)
@@ -308,7 +331,7 @@ def send_notes_email_endpoint(meeting_id):
          # Pobierz dane do maila, i wyślij wiadomość
         if transcription:
            ##emails = [Users.query.filter_by(user_id = participant.user_id).first().email for participant in participants]
-            emails = ["heniekkombajnista666@gmail.com"]
+            emails = ["heniekkombajnista666@gmail.com", "piotrrus2006@gmail.com"]
             screenshots = Screenshots.query.filter_by(meeting_id=meeting_id).all()
             ocr_texts = []
             for screenshot in screenshots:

@@ -22,14 +22,14 @@ def detect_whiteboard(image_path):
     return whiteboard_contours
 
 
-def crop_and_save_whiteboard(image_path, output_path, contours):
+def crop_and_save_whiteboard(image_path, output_path, contours, name):
     image = cv2.imread(image_path)
     for i, (x, y, w, h) in enumerate(contours):
         if w < 50 or h < 50:  # Minimalny rozmiar (zabezpieczenie)
             print(f"Skipping small contour: x={x}, y={y}, w={w}, h={h}")
             continue
         cropped = image[y:y+h, x:x+w]
-        cv2.imwrite(f"{output_path}/whiteboard_{i}.png", cropped)
+        cv2.imwrite(f"{output_path}/whiteboard_{name}_{i}.png", cropped)
         
 def preprocess_for_ocr(image_path):    
     if not isinstance(image_path, str) or not os.path.exists(image_path):
