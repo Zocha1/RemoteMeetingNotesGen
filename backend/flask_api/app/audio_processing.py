@@ -7,7 +7,7 @@ import whisper
 import cohere
 from .models import db, Transcriptions, Meetings
 from .email_service import send_meeting_notes_email
-
+from .active_meeting import find_active_meeting
 
 def _convert_to_wav(audio_file_path):
     """
@@ -62,7 +62,8 @@ def process_audio_to_text(audio_file_path):
 
         # Zapisz transkrypcję w bazie danych
         try:
-            last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
+            last_meeting = find_active_meeting()
+            # last_meeting = Meetings.query.order_by(Meetings.meeting_id.desc()).first()
             if last_meeting:
                 meeting_id = str(last_meeting.meeting_id)
             else:
