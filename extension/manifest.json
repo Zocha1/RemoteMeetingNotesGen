@@ -2,24 +2,21 @@
   "name": "Screen Capture Extension",
   "description": "Extension for screen recording and screenshot capture",
   "version": "1.0",
+  "minimum_chrome_version": "116",
   "manifest_version": 3,
-  "permissions": [
-    "activeTab",
-    "desktopCapture",
-    "windows",
-    "tabCapture",
-    "tabs",
-    "offscreen"
-  ],
-  "background": {
-    "service_worker": "/src/background.js"
-  },
   "action": {
-    "default_popup": "/src/index.html",
-    "default_icon": "/assets/icon.png"
+    "default_icon": "icons/not-recording.png",
+    "default_popup": "popup.html"
   },
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "permissions": ["tabCapture", "offscreen", "activeTab"],
+  "host_permissions": ["*://*/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["permission.html", "offscreen.html"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }

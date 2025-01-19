@@ -11,17 +11,18 @@
     <h1>Remote Meeting Notes</h1>
 
     <!-- Timer -->
-    <div id="timer">00:00:00</div>
+    <!-- <div id="timer">00:00:00</div> -->
 
     <!-- First Row: Play, Pause, Stop -->
+    <div id="permissionStatus"></div>
     <div class="button-row">
-      <button id="start-recording" class="button">
+      <button id="startRecord" class="button">
         <img src="https://img.icons8.com/ios-filled/100/play--v1.png" alt="Start Recording">
       </button>
-      <button id="pause-recording" class="button">
+      <!-- <button id="pause-recording" class="button">
         <img src="https://img.icons8.com/ios-filled/100/pause--v1.png" alt="Pause">
-      </button>
-      <button id="stop-recording" class="button">
+      </button> -->
+      <button id="stopRecord" class="button">
         <img src="https://img.icons8.com/ios-filled/100/stop--v1.png" alt="Stop Recording">
       </button>
     </div>
@@ -41,6 +42,6 @@
   </div>
 
   <script src="/assets/jquery-3.6.0.min.js"></script>
-  <script src="script.js"></script>
+  <script src="popup.js"></script>
 </body>
 </html>
