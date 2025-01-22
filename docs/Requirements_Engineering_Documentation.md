@@ -60,7 +60,7 @@
 | OCR - Optical Character Recognition | Rozpoznawanie tekstu w obrazach, np. z whiteboarda.                       | -                              |
 | Generowanie notatki ze spotkania    | Eksport notatek w formatach: PDF, HTML, TXT, MD.                          | -                              |
 | Raport po spotkaniu                 | Automatyczne wysyłanie raportu e-mailem do uczestników.                   | Brevo (ex Sendinblue), Margin  |
-| Integracja z kalendarzem            | Automatyczne uruchamianie nagrywania na podstawie zaplanowanych wydarzeń. | -                              |
+| Integracja z kalendarzem            | Automatyczne dodawanie zaplanowanych spotkań.                             | W google Calendar, zaplanowanie spotkania na Zoom |
 | Wsparcie dla platform               | Obsługa Zoom, Microsoft Teams, Google Meet.                               | -                              |
 | Identyfikacja mówców                | Przypisywanie wypowiedzi do konkretnych osób.                             | Opcjonalnie - "nice to have".  |
 | Podsumowanie notatek                | Wyciąganie kluczowych informacji.                                         | -                              |
@@ -80,16 +80,17 @@ Przechowuje informacje o użytkownikach aplikacji.
 
 | Kolumna       | Typ danych      | Opis                                              |
 |---------------|-----------------|---------------------------------------------------|
-| `user_id`     | `INT`           | Unikalny identyfikator użytkownika (klucz główny) |
-| `name`        | `VARCHAR(100)`  | Imię i nazwisko użytkownika                       |
-| `email`       | `VARCHAR(100)`  | Adres e-mail użytkownika                          |
+| `user_id`     | `INT`           | Unikalny identyfikator uczestnika  (klucz główny) |
+| `firstname`   | `VARCHAR(50)`   | Imię  uczestnika                                  |
+| `lastname`    | `VARCHAR(50)`   | Nazwisko  uczestnika                              |
+| `email`       | `VARCHAR(120)`  | Adres e-mail uczestnika                           |
 
 #### Przykład danych wejściowych:
-| user_id | name             | email                |
-|---------|------------------|----------------------|
-| 1       | Zofia            | zofia@example.com    |
-| 2       | Marta            | marta@example.com    |
-| 3       | Paweł            | pawel@example.com    |
+| user_id | firstname | lastname | email                |
+|---------|-----------|----------|----------------------|
+| 1       | Zofia     |  M       | zofia@example.com    |
+| 2       | Marta     |  P       | marta@example.com    |
+| 3       | Paweł     |  R       | pawel@example.com    |
 
 ---
 
@@ -102,14 +103,13 @@ Przechowuje dane dotyczące spotkań.
 | `title`          | `VARCHAR(255)`  | Tytuł spotkania                                   |
 | `scheduled_time` | `DATETIME`      | Data i godzina zaplanowanego spotkania           |
 | `platform`       | `VARCHAR(50)`   | Platforma używana podczas spotkania (np. Zoom)   |
-| `created_by`     | `INT`           | ID użytkownika tworzącego spotkanie              |
 
 #### Przykład danych wejściowych:
-| meeting_id | title               | scheduled_time      | platform   | created_by |
-|------------|---------------------|---------------------|------------|------------|
-| 1          | Planowanie projektu | 2024-02-01 09:00:00 | Zoom       | 1          |
-| 2          | Warsztat OCR        | 2024-02-02 10:00:00 | Teams      | 2          |
-| 3          | Analiza AI          | 2024-02-03 11:00:00 | Meet       | 3          |
+| meeting_id | title               | scheduled_time      | platform        | 
+|------------|---------------------|---------------------|-----------------|
+| 1          | Planowanie projektu | 2024-02-01 09:00:00 | Zoom            | 
+| 2          | Warsztat OCR        | 2024-02-02 10:00:00 | Microsoft Teams |
+| 3          | Analiza AI          | 2024-02-03 11:00:00 | Google Meet     |
 
 ---
 
@@ -122,34 +122,34 @@ Przechowuje relacje między użytkownikami a spotkaniami.
 | `meeting_id`      | `INT`           | ID spotkania, w którym użytkownik uczestniczy    |
 | `user_id`         | `INT`           | ID użytkownika uczestniczącego w spotkaniu       |
 | `role`            | `VARCHAR(50)`   | Rola użytkownika w spotkaniu (`Host`, `Guest`)   |
-| `joined_at`       | `DATETIME`      | Czas dołączenia do spotkania                     |
 
 #### Przykład danych wejściowych:
-| participant_id | meeting_id | user_id | role         | joined_at           |
-|----------------|------------|---------|--------------|---------------------|
-| 1              | 1          | 1       | Host         | 2024-02-01 09:00:00 |
-| 2              | 1          | 2       | Participant  | 2024-02-01 09:05:00 |
-| 3              | 2          | 2       | Host         | 2024-02-02 10:00:00 |
-| 4              | 3          | 3       | Participant  | 2024-02-03 11:10:00 |
+| participant_id | meeting_id | user_id | role         |
+|----------------|------------|---------|--------------|
+| 1              | 1          | 1       | Host         |
+| 2              | 1          | 2       | Participant  | 
+| 3              | 2          | 2       | Host         |
+| 4              | 3          | 3       | Participant  |
 
 ---
 
 ### Tabela: `transcriptions`
 Przechowuje pełne dane transkrypcji ze spotkań.
 
-| Kolumna            | Typ danych      | Opis                                              |
+| Kolumna             | Typ danych      | Opis                                              |
 |---------------------|-----------------|---------------------------------------------------|
 | `transcription_id`  | `INT`           | Unikalny identyfikator transkrypcji (klucz główny)|
 | `meeting_id`        | `INT`           | ID spotkania, którego dotyczy transkrypcja        |
-| `full_text`         | `TEXT`          | Pełna treść transkrypcji                         |
-| `created_at`        | `DATETIME`      | Data i godzina wygenerowania transkrypcji        |
+| `full_text`         | `TEXT`          | Pełna treść transkrypcji                          |
+| `summary`           | `TEXT`          | Podsumowanie transkrypcji                         |
+| `created_at`        | `DATETIME`      | Data i godzina wygenerowania transkrypcji         |
 
 #### Przykład danych wejściowych:
-| transcription_id | meeting_id | full_text                                     | created_at          |
-|------------------|------------|-----------------------------------------------|---------------------|
-| 1                | 1          | "Witamy na spotkaniu. Omówimy harmonogram..."| 2024-02-01 12:00:00 |
-| 2                | 2          | "Zapraszam na warsztaty OCR. Rozpoczynamy od..." | 2024-02-02 14:00:00 |
-| 3                | 3          | "Analiza modeli AI. Przedstawiamy wyniki testów..."| 2024-02-03 15:00:00 |
+| transcription_id | meeting_id | full_text                                          | summary          | created_at          |
+|------------------|------------|----------------------------------------------------|------------------|---------------------|
+| 1                | 1          | "Witamy na spotkaniu. Omówimy harmonogram..."      | Na spotkaniu ... | 2024-02-01 12:00:00 |
+| 2                | 2          | "Zapraszam na warsztaty OCR. Rozpoczynamy od..."   | Podsumowanie     | 2024-02-02 14:00:00 |
+| 3                | 3          | "Analiza modeli AI. Przedstawiamy wyniki testów..."| Podsumowanie     | 2024-02-03 15:00:00 |
 
 ---
 
@@ -173,26 +173,6 @@ Przechowuje zapisane obrazy ekranów ze spotkań.
 
 ---
 
-### Tabela: `reports`
-Przechowuje dane o wygenerowanych raportach.
-
-| Kolumna       | Typ danych      | Opis                                              |
-|---------------|-----------------|---------------------------------------------------|
-| `report_id`   | `INT`           | Unikalny identyfikator raportu (klucz główny)     |
-| `meeting_id`  | `INT`           | ID spotkania, którego dotyczy raport              |
-| `file_path`   | `VARCHAR(255)`  | Ścieżka do pliku raportu                          |
-| `format`      | `VARCHAR(10)`   | Format raportu (np. PDF, TXT, MD)                 |
-| `created_at`  | `DATETIME`      | Data i godzina wygenerowania raportu              |
-
-#### Przykład danych wejściowych:
-| report_id | meeting_id | file_path             | format  | created_at          |
-|-----------|------------|-----------------------|---------|---------------------|
-| 1         | 1          | /reports/meeting1.pdf | PDF     | 2024-02-01 12:00:00 |
-| 2         | 2          | /reports/meeting2.md  | MD      | 2024-02-02 14:00:00 |
-| 3         | 3          | /reports/meeting3.txt | TXT     | 2024-02-03 15:00:00 |
-
----
-
 ### Tabela: `ocr`
 Przechowuje wyniki analizy OCR.
 
@@ -206,20 +186,20 @@ Przechowuje wyniki analizy OCR.
 #### Przykład danych wejściowych:
 | ocr_id | screenshot_id | text                          | confidence |
 |--------|---------------|-------------------------------|------------|
-| 1      | 1             | "Plan projektu"              | 98.5       |
-| 2      | 2             | "Warsztaty"                  | 95.2       |
-| 3      | 3             | "Analiza modeli AI"          | 96.7       |
-
+| 1      | 1             | "Plan projektu"               | 98.5       |
+| 2      | 2             | "Warsztaty"                   | 95.2       |
+| 3      | 3             | "Analiza modeli AI"           | 96.7       |
+ 
 
 
 ## 5. Modelowanie systemu za pomocą tabeli i przepływ danych
 
 | **Aktorzy**      | Użytkownik końcowy, serwer aplikacji, analityk danych      |
-|-------------------|----------------------------------------------------------|
+|------------------|----------------------------------------------------------|
 | **Opis**         | Celem działania systemu jest przetwarzanie i analizowanie danych zdalnych spotkań, takich jak transkrypcje mowy, zrzuty ekranu oraz OCR. System generuje raporty oraz podsumowania, które są automatycznie wysyłane do uczestników. |
 | **Dane**         | Pliki dźwiękowe, obrazy (zrzuty ekranu, zdjęcia tablic), treść transkrypcji, dane uczestników spotkania, informacje z kalendarza. |
-| **Wyzwalacz**    | Rozpoczęcie spotkania zarejestrowanego w kalendarzu lub ręczne uruchomienie nagrywania przez użytkownika. |
-| **Odpowiedź**    | Raport z transkrypcją i zrzutami ekranu, statystyki wypowiedzi, podsumowanie kluczowych informacji, wykryte elementy OCR. |
+| **Wyzwalacz**    | Manualne uruchomienie nagrywania ekranu przez użytkownika za pomocą wtyczki. |
+| **Odpowiedź**    | Raport z danymi spotkania, transkrypcją, podsumowaniem, tekstem ze zrzutów ekranu wykrytym OCR. |
 | **Uwagi**        | - Wysoka dokładność OCR oraz transkrypcji. <br> - Możliwość przetwarzania danych dla wielu platform telekonferencyjnych (Zoom, Teams, Google Meet). |
 
 
@@ -232,18 +212,13 @@ graph LR
     A --> C[Generowanie zrzutów ekranu]
     C --> D[Zapis zrzutów ekranu]
     D --> E[OCR - Rozpoznawanie tekstu]
-    B --> F{Identyfikacja mówcy}
-    F -- Użytkownik A --> G[Przypisz wypowiedź A]
-    F -- Użytkownik B --> H[Przypisz wypowiedź B]
-    G --> I[Dodaj tekst do transkrypcji]
-    H --> I
+    B --> I[Dodaj tekst do transkrypcji]
     I --> J[Generowanie notatek]
     E --> J
     J --> K[Generowanie pliku PDF, TXT, HTML lub MD]
     K --> L[Wysłanie e-mail do wszystkich uczestników]
 
-    AA[Integracja z kalendarzem] --> AB[Automatyczne uruchamianie nagrywania]
-    AB --> AC[Integracja z Zoom, MS Teams, Google Meet]
+    AA[Planowanie spotkania] --> AB[Integracja z kalendarzem] --> AC[Integracja z Zoom, MS Teams, Google Meet]
 
 ```
 
@@ -296,15 +271,36 @@ sequenceDiagram
     <a href="https://flask.palletsprojects.com/" target="_blank" rel="noreferrer">
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flask/flask-original.svg" alt="Flask" width="85" height="85"/>
     </a>
+     <a href="https://sqlite.org/index.html" target="_blank" rel="noreferrer">
+         <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/SQLite370.svg" alt="SQLite" width="85" height="85"/>
+     </a> 
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noreferrer"> 
+        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="HTML" width="85" height="85"/> 
+    </a> 
+    <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noreferrer"> 
+        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg" alt="CSS" width="85" height="85"/> 
+    </a> 
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> 
+        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript" width="85" height="85"/> 
+    </a>
 </div>
 
 #### Uzasadnienie wyboru technologii
 
 #### **Python**  
-Python został wybrany ze względu na bogaty ekosystem bibliotek wspierających kluczowe funkcjonalności projektu. SpeechRecognition umożliwi transkrypcję mowy, spaCy i NLTK posłużą do analizy językowej, a Tesseract OCR do rozpoznawania tekstu z obrazów. Python doskonale nadaje się do przetwarzania języka naturalnego (NLP) oraz integracji z systemami zewnętrznymi.
+Python został wybrany ze względu na bogaty ekosystem bibliotek wspierających kluczowe funkcjonalności projektu. Model Whisper od Open-AI umożliwi transkrypcję mowy,  Tesseract OCR do rozpoznawania tekstu z obrazów. Python doskonale nadaje się do przetwarzania języka naturalnego (NLP) oraz integracji z systemami zewnętrznymi.
 
 #### **Flask**  
 Flask to lekki framework webowy, który umożliwia elastyczną budowę backendu. Jego prostota pozwala na szybkie tworzenie API, zarządzanie sesjami użytkowników oraz obsługę zapytań HTTP.
 
-#### **PostgreSQL**  
-PostgreSQL to niezawodna baza danych relacyjnych, która zapewnia wysoką wydajność i bezpieczeństwo. Sprawdzi się w przechowywaniu danych, takich jak transkrypcje, informacje o użytkownikach, zrzuty ekranu i wyniki OCR, wspierając zaawansowane zapytania i skalowalność systemu.
+#### **SQLite**
+SQLite to lekka baza danych, która świetnie sprawdza się w projektach o mniejszej skali i uproszczonej architekturze. Dzięki brakowi potrzeby uruchamiania osobnego serwera, SQLite oferuje szybkie wdrożenie i prostą konfigurację. Jest doskonałym wyborem do przechowywania danych takich jak transkrypcje, zrzuty ekranu czy wyniki OCR w lokalnych aplikacjach lub środowiskach testowych.
+
+#### **HTML, CSS, JavaScript**
+Technologie frontendowe HTML, CSS i JavaScript zostaną wykorzystane do stworzenia interfejsu użytkownika w postaci wtyczki jak i stron do zarządzania spotkaniami i notatkami.
+
+- **HTML** pozwala na budowę struktury stron i formularzy używanych przez użytkowników.
+  
+- **CSS** przyda się w dostosowaniu stylistyki aplikacji
+  
+- **JavaScript** umożliwi dynamiczne reakcje na działania użytkownika oraz integrację wtyczki z backendem.
