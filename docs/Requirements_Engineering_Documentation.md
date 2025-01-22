@@ -2,9 +2,9 @@
 
 ## Członkowie zespołu
 
-- [Zofia](https://github.com/Zocha1)
-- [Marta](https://github.com/marpom03)
-- [Paweł](https://github.com/pawel-rus)
+- [Zofia ](https://github.com/Zocha1)
+- [Marta ](https://github.com/marpom03)
+- [Paweł ](https://github.com/pawel-rus)
 
 ## 1. Macierz kompetencji zespołu
 
@@ -41,10 +41,10 @@
 |--------------------------------------------------|----------------------------------------------------------------------------------------|---------------------------------------------------|
 | Jaka ma to być aplikacja? Webowa czy Desktopowa? | Webowa lub plugin do przeglądarki.                                                     | Powinna działać niezależnie od narzędzia do telekonferencji. |
 | Ilu użytkowników będzie korzystać z aplikacji?   | Nieokreślona liczba, zakładamy wsparcie dla dowolnej liczby uczestników w spotkaniach. | Skalowalność.                                     |
-| Jakie dane mają być przetwarzane?                | Transkrypcja mowy, zrzuty ekranu, treści OCR, identyfikacja mówców.                    | -                                                 |
+| Jakie dane mają być przetwarzane?                | Transkrypcja mowy, zrzuty ekranu, treści OCR.                    | -                                                 |
 | Jakie formaty eksportu są wymagane?              | PDF, HTML, TXT, MD.                                                                    | -                                                 |
 | Jakie platformy do spotkań mają być wspierane?   | Zoom, Microsoft Teams, Google Meet.                                                    | Możliwość rozbudowy o inne platformy.             |
-| Czy aplikacja powinna działać automatycznie?     | Tak, z automatycznym uruchamianiem na podstawie wydarzeń w kalendarzu.                 | Integracja z kalendarzem.                         |
+| Czy aplikacja powinna działać automatycznie?     | Powinna zapisywać utworzone spotkania do kalendarza w danej aplikacji, np Google Calendar.                 | Integracja z kalendarzem.                         |
 | Czy raporty mają być wysyłane automatycznie?     | Tak, e-mailem do uczestników spotkania.                                                | Brevo (ex Sendinblue), Margin                       |
 | Czy aplikacja ma identyfikować mówców?           | Tak, to opcjonalna funkcjonalność.                                      | Może wymagać zaawansowanego przetwarzania danych. |
 | Czy potrzebne są dodatkowe analizy statystyczne? | Tak, opcjonalnie analiza ilości i szybkości wypowiedzi uczestników.                    | So omówienia z klientem.           |
@@ -127,9 +127,9 @@ Przechowuje relacje między użytkownikami a spotkaniami.
 | participant_id | meeting_id | user_id | role         |
 |----------------|------------|---------|--------------|
 | 1              | 1          | 1       | Host         |
-| 2              | 1          | 2       | Participant  | 
+| 2              | 1          | 2       | Guest        | 
 | 3              | 2          | 2       | Host         |
-| 4              | 3          | 3       | Participant  |
+| 4              | 3          | 3       | Guest        |
 
 ---
 
