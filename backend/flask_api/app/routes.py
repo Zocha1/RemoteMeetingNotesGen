@@ -577,6 +577,10 @@ def download_meeting_data_md(output_format, meeting_id):
 def index():
     return render_template('base.html')
 
+@main_routes.route('/authorization.html')
+def success():
+    return render_template('authorization.html')
+
 @main_routes.route('/home')
 def home():
     return render_template('home.html')
@@ -647,10 +651,8 @@ def oauth2callback():
         'scopes': credentials.scopes
     }
     
-    # Debugowanie tokenów
-    print("Sesja po zapisaniu tokena:", session)
-    return jsonify({'message': 'Google Calendar connected successfully'})
-
+    succesfull_link = "http://localhost:5000/authorization.html"
+    return redirect(succesfull_link)
 
 
 @main_routes.route('/sync-google-calendar', methods=['POST'])
@@ -736,9 +738,8 @@ def zoom_callback():
     if response.status_code == 200:
         tokens = response.json()
         session['zoom_access_token'] = tokens['access_token']
-        return jsonify({'message': 'Zoom authorized successfully', 'tokens': tokens})
-    else:
-        return jsonify({'error': response.json()}), response.status_code
+        succesfull_link = "http://localhost:5000/authorization.html"
+        return redirect(succesfull_link)
 
 
 @main_routes.route('/zoom/create-meeting', methods=['POST'])
