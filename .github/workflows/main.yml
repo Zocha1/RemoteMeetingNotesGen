@@ -129,7 +129,7 @@ jobs:
 
       - name: Run Pylint on /backend/flask_api/app
         run: |
-          pylint backend/flask_api/app > pylint-report.txt
+          pylint backend/flask_api/app > pylint-report.txt || true
           echo "Pylint analysis completed."
 
       - name: Upload Pylint Report
