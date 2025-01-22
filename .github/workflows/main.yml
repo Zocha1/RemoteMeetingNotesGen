@@ -116,11 +116,19 @@ jobs:
       #     cd tests/extension
       #     node_modules/.bin/playwright test
   
-  code-quality-check:
+  pylint-quality-check:
     runs-on: ubuntu-latest
+    needs: [test-backend, test-extension]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          echo "Setting up virtual environment and installing dependencies..."
+          python -m venv venv  
+          source venv/bin/activate 
+          pip install -r backend/requirements.txt 
 
       - name: Install Python Linter Tools
         run: |
@@ -142,3 +150,26 @@ jobs:
         with:
           name: pylint-report
           path: pylint-report.txt
+  
+  flake8-quality-check:
+    runs-on: ubuntu-latest
+    needs: [test-backend, test-extension]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Python Linter Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Run Flake8 on /backend/flask_api/app
+        run: |
+          flake8 backend/flask_api/app > flake8-report.txt || true
+          echo "Flake8 analysis completed."
+
+      - name: Upload Flake8 Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: flake8-report
+          path: flake8-report.txt
