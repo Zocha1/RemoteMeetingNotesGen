@@ -1,9 +1,6 @@
 # Remote Meeting Notes Generator
 
-## Wymagania
-
-
-## Instalacja
+## Instalacja aplikacji
 
 1.  **Klonowanie repozytorium:**
     ```bash
@@ -31,7 +28,19 @@
     cd backend/
     pip install -r requirements.txt
     ```
-# ... 
+## Instalacja dodatkowych narzędzi
+
+### Instalacja FFmpeg
+
+**Na systemach Windows:**
+- Pobrać ze strony https://www.gyan.dev/ffmpeg/builds/ najnowszą wersję folderu “ffmpeg-git-essentials.7z” 
+- Rozpakować pobrany folder
+- Dodać ścieżkę do rozpakowanego folderu do zmiennej środowiskowej PATH
+
+**Na systemach Linux:**
+```
+sudo apt install ffmpeg
+```
 
 ## Uruchomienie aplikacji
 
