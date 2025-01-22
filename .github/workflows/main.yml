@@ -127,9 +127,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install pylint
 
+      - name: Debug - List Python files
+        run: |
+          echo "Listing Python files in /backend/flask_api/app:"
+          find backend/flask_api/app -name "*.py" || echo "No Python files found."
+
       - name: Run Pylint on /backend/flask_api/app
         run: |
-          pylint backend/flask_api/app > pylint-report.txt || true
+          find backend/flask_api/app -name "*.py" | xargs pylint > pylint-report.txt || true
           echo "Pylint analysis completed."
 
       - name: Upload Pylint Report
